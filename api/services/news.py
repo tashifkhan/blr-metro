@@ -1,6 +1,6 @@
 """News list. PDF paths on the fare host are turned into absolute URLs."""
 
-from urllib.parse import urljoin, urlsplit
+from urllib.parse import quote, urljoin, urlsplit, urlunsplit
 
 from clients.bmrc import BmrcClient
 from core.config import settings
@@ -12,7 +12,7 @@ def _file_root() -> str:
     return f"{parts.scheme}://{parts.netloc}"
 
 
-def _absolute(path: object) -> str | None:
+def _absolute(path: object, *, kannada: bool = False) -> str | None:
     if not path or not isinstance(path, str):
         return None
     text = path.strip()
@@ -20,8 +20,13 @@ def _absolute(path: object) -> str | None:
         return None
     if text.startswith("http://") or text.startswith("https://"):
         return text
-    # Uploads live on the host root, not under /api.
-    return urljoin(_file_root() + "/", text)
+    # The feed omits the language-specific directory containing each upload.
+    relative = text.lstrip("/")
+    if relative.lower().startswith("fileuploads/"):
+        folder = "Kannada/uploads/news/kannada" if kannada else "English/uploads/news/english"
+        text = f"/{folder}/{relative}"
+    parts = urlsplit(urljoin(_file_root() + "/", text))
+    return urlunsplit(parts._replace(path=quote(parts.path, safe="/%:@!$&'()*+,;=-._~")))
 
 
 def _item(row: dict) -> NewsItem | None:
@@ -37,7 +42,7 @@ def _item(row: dict) -> NewsItem | None:
         marquee=bool(row.get("is_marquee")),
         latest=bool(row.get("is_latestnews")),
         pdf_url=_absolute(row.get("eng_file_source")),
-        pdf_url_kn=_absolute(row.get("kan_file_source")),
+        pdf_url_kn=_absolute(row.get("kan_file_source"), kannada=True),
     )
 
 

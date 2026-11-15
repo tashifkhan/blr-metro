@@ -45,7 +45,7 @@ Interchanges are the same code twice, not two stations:
 
 Orders are contiguous inside a line. Purple 101 to 137, Green 21 to 52, Yellow 301 to 316, Pink 317 to 322. There is no route, time, or platform field. The only fare path in the bundle is `get-fare-details`.
 
-News file paths are relative to `https://english.bmrc.co.in:8282`, not to `/api`.
+News file paths beginning with `/fileuploads/` or `/FileUploads/` omit their upload directory. Resolve English PDFs under `https://english.bmrc.co.in:8282/English/uploads/news/english/` and Kannada PDFs under `https://english.bmrc.co.in:8282/Kannada/uploads/news/kannada/`. Preserve absolute URLs and URL-encode spaces in relative filenames.
 
 ## Maps
 

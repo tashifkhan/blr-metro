@@ -7,7 +7,7 @@ import pytest
 from clients.bmrc import BmrcClient
 from core.errors import UpstreamApiError
 from services.catalog import normalize_rows
-from services.news import list_news
+from services.news import _absolute, list_news
 from services.planner import FareCache, plan_journey
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -133,5 +133,46 @@ def test_news_urls_are_absolute_and_deduped():
     ids = [item.id for item in items]
     assert len(ids) == len(set(ids))
     reach = next(item for item in items if item.id == 19)
-    assert reach.pdf_url.startswith("https://english.bmrc.co.in:8282/fileuploads/")
-    assert "/api/fileuploads/" not in reach.pdf_url
+    assert reach.pdf_url == (
+        "https://english.bmrc.co.in:8282/English/uploads/news/english/"
+        "fileuploads/1728135762487$@!!REACH-5_STATES%20as%20on%2005.10.2024.pdf"
+    )
+    assert reach.pdf_url_kn == (
+        "https://english.bmrc.co.in:8282/Kannada/uploads/news/kannada/"
+        "fileuploads/1728135762878$@!!Reach-5%20Status-Kannada%20as%20on%2005.10.2024.pdf"
+    )
+    meeting = next(item for item in items if item.id == 31)
+    assert meeting.pdf_url == (
+        "https://english.bmrc.co.in:8282/English/uploads/news/english/"
+        "fileuploads/1773832814191$@!!I-Metro.pdf"
+    )
+    assert meeting.pdf_url_kn == (
+        "https://english.bmrc.co.in:8282/Kannada/uploads/news/kannada/"
+        "fileuploads/1773832814218$@!!I-Metro.pdf"
+    )
+    older = next(item for item in items if item.id == 4)
+    assert older.pdf_url == (
+        "https://english.bmrc.co.in:8282/English/uploads/news/english/"
+        "FileUploads/4663ad81-5404-4c7d-afdb-8521f06ae642$@!!@$news%203.pdf"
+    )
+
+
+@pytest.mark.parametrize(
+    ("path", "expected"),
+    [
+        (None, None),
+        ("  ", None),
+        (123, None),
+        (
+            "fileuploads/news%20report.pdf",
+            "https://english.bmrc.co.in:8282/English/uploads/news/english/fileuploads/news%20report.pdf",
+        ),
+        (
+            "/English/uploads/news/english/fileuploads/news.pdf",
+            "https://english.bmrc.co.in:8282/English/uploads/news/english/fileuploads/news.pdf",
+        ),
+        ("https://example.com/news%20report.pdf", "https://example.com/news%20report.pdf"),
+    ],
+)
+def test_news_url_preserves_existing_urls_and_encoded_filenames(path, expected):
+    assert _absolute(path) == expected
