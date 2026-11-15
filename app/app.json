@@ -1,0 +1,59 @@
+{
+  "expo": {
+    "name": "Namma Metro",
+    "slug": "blr-metro",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "codes.tashif.blrmetro"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "monochromeImage": "./assets/adaptive-icon-monochrome.png",
+        "backgroundColor": "#6D28D9"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "codes.tashif.blrmetro",
+      "versionCode": 1
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/favicon.png",
+      "name": "Namma Metro",
+      "shortName": "Namma Metro",
+      "description": "Journey planner, fares, and network maps for Bengaluru's Namma Metro.",
+      "lang": "en",
+      "themeColor": "#6D28D9",
+      "backgroundColor": "#ffffff",
+      "display": "standalone"
+    },
+    "plugins": [
+      [
+        "expo-sqlite",
+        {
+          "enableFTS": false
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": false,
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save metro maps.",
+          "granularPermissions": []
+        }
+      ]
+    ]
+  }
+}

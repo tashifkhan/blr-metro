@@ -1,0 +1,356 @@
+export type RouteStrategy = 'least-distance' | 'minimum-interchange';
+
+/**
+ * Passenger network, mirroring the API's `network` parameter. Declared here
+ * rather than in the network context so the type layer stays dependency-free.
+ */
+export type MetroNetwork = 'dmrc' | 'nmrc';
+
+/** Cache/query scope for a journey, which may span both networks. */
+export type JourneyScope = MetroNetwork | 'combined';
+
+export interface MetroLine {
+  id: number;
+  name: string;
+  /** Kannada name, printed under the English one. */
+  name_kn?: string;
+  line_color: string;
+  line_code: string;
+  primary_color_code: string;
+  secondary_color_code: string | null;
+  class_primary: string;
+  class_secondary: string | null;
+  start_station: string;
+  end_station: string;
+  show_in_frontend: boolean | null;
+  /**
+   * Upstream service status. Empty when the API publishes none, which hides
+   * every status badge rather than claiming normal service.
+   */
+  status: string;
+  /**
+   * Which operator runs this line. Added by the app when the two catalogs are
+   * merged, not returned by the API.
+   */
+  network?: MetroNetwork;
+}
+
+export interface StationRef {
+  id: number;
+  station_name: string;
+  station_code: string;
+}
+
+export interface NotificationImage {
+  title: string;
+  file: string;
+}
+
+export interface NotificationType {
+  name: string;
+  image: NotificationImage;
+}
+
+export interface PassengerNotification {
+  id: number;
+  title: string;
+  title_kn?: string | null;
+  notification_type: NotificationType | null;
+  image: NotificationImage | null;
+  video_url: string | null;
+  link_to: string | null;
+  link_to_file: string | null;
+  link_to_internal_page: string | null;
+  link_to_outside_url: string | null;
+  date: string;
+}
+
+export interface PassengerNotificationDetail {
+  page_id: number | null;
+  title: string;
+  content: string;
+  page_slug: string;
+  cover_photo: NotificationImage | null;
+  seo_title: string | null;
+  search_description: string | null;
+}
+
+export interface StationFacilityImage {
+  title: string;
+  file: string;
+}
+
+export interface StationFacility {
+  name: string;
+  class_name: string;
+  image: StationFacilityImage;
+}
+
+export interface StationLineBadge {
+  line_id: number;
+  line_code: string;
+  line_name: string;
+  line_color: string;
+  primary_color_code: string;
+}
+
+export interface StationSearchResult {
+  id: number;
+  station_name: string;
+  /** Kannada name, printed under the English one. */
+  station_name_kn?: string;
+  station_code: string;
+  station_facility: StationFacility[];
+  metro_lines: StationLineBadge[];
+  /**
+   * Which operator publishes this station. Added by the app when the two
+   * catalogs are merged, not returned by the API.
+   */
+  network?: MetroNetwork;
+}
+
+export interface JourneyPathPoint {
+  name: string;
+  status: string | null;
+}
+
+export interface JourneyRouteSegment {
+  line: string;
+  line_no: number | null;
+  path: JourneyPathPoint[];
+  path_time: string | null;
+  'map-path': string[];
+  station_interchange_time: number;
+  start: string;
+  end: string;
+}
+
+export interface JourneyFareWithRoute {
+  stations: number;
+  from: string;
+  to: string;
+  total_time: string;
+  weekday_fare: number;
+  weekend_fare: number;
+  route: JourneyRouteSegment[];
+}
+
+export interface FirstLastTrainSegment {
+  start_st: string;
+  start_time: string;
+  end_st: string;
+  end_time: string;
+  interchange_time: string | number | null;
+  start_station_name: string;
+  end_station_name: string;
+}
+
+export interface FirstTrainInfo {
+  endstation_from_first_train_estimated_time: string | null;
+  first_train_route_detail: FirstLastTrainSegment[];
+}
+
+export interface LastTrainInfo {
+  endstation_from_last_train_estimated_time: string | null;
+  last_train_route_detail: FirstLastTrainSegment[];
+}
+
+export interface FirstLastTrainResponse {
+  first_train: FirstTrainInfo | null;
+  last_train: LastTrainInfo | null;
+}
+
+/** @deprecated Prefer PlannedJourney from the v2 planner. */
+export interface JourneyPlan {
+  least_distance_fare: JourneyFareWithRoute;
+  minimum_interchange_fare: JourneyFareWithRoute;
+  least_distance_train: FirstLastTrainResponse;
+  minimum_interchange_train: FirstLastTrainResponse;
+}
+
+/** Upstream that produced a v2 journey plan. */
+export type JourneySource = 'sarthi' | 'dmrc' | 'nmrc' | 'combined';
+
+/** What a traveller does during one leg. */
+export type LegKind = 'metro' | 'transfer';
+
+export interface NetworkFare {
+  network: MetroNetwork;
+  normal: number;
+  special: number | null;
+  applicable: number | null;
+}
+
+export interface PlannedStation {
+  name: string;
+  name_kn?: string | null;
+  code: string;
+  slug: string | null;
+  legacy_code: string | null;
+  sarthi_code: string | null;
+  status: string | null;
+}
+
+/** BMRC's four published prices for one journey. */
+export interface BmrcFare {
+  zone: string;
+  token: number;
+  smart_card_peak: number;
+  smart_card_off_peak: number;
+  group_ticket: number;
+}
+
+export interface PlannedFare {
+  normal: number;
+  special: number | null;
+  applicable: number | null;
+  /** Per-network split, set only when the journey crosses networks. */
+  breakdown: NetworkFare[];
+  /** Always set for Namma Metro plans; drives the fare cards. */
+  bmrc: BmrcFare;
+}
+
+export interface PlannedStop {
+  name: string;
+  name_kn?: string | null;
+  status: string | null;
+}
+
+export interface PlannedLeg {
+  /** `transfer` is the walk between networks: no line colour, platform, or fare. */
+  kind: LegKind;
+  network: MetroNetwork | null;
+  source: JourneySource | null;
+  walk_metres: number | null;
+  note: string | null;
+  line_name: string;
+  line_number: number | null;
+  line_color: string | null;
+  from_station: string;
+  from_station_code: string | null;
+  to_station: string;
+  to_station_code: string | null;
+  station_count: number | null;
+  stops: PlannedStop[];
+  map_path: string[];
+  duration: string | null;
+  distance_km: number | null;
+  direction: string | null;
+  platform_name: string | null;
+  towards_station: string | null;
+  start_time: string | null;
+  end_time: string | null;
+  interchange_minutes: number | null;
+}
+
+export interface PlannedInterchange {
+  station: string;
+  minutes: number | null;
+}
+
+export interface ServiceTimes {
+  first: string | null;
+  last: string | null;
+}
+
+/** Opens an operator's WhatsApp chatbot. The URL only pre-fills Hi. */
+export interface WhatsAppBooking {
+  network: MetroNetwork;
+  label: string;
+  phone: string;
+  url: string;
+  note: string;
+}
+
+/** Normalized journey plan from GET /api/v2/journeys/plan. */
+export interface PlannedJourney {
+  source: JourneySource;
+  /** Networks used, in travel order. */
+  networks: MetroNetwork[];
+  /** True when the journey crosses networks and needs a ticket on each. */
+  separate_tickets: boolean;
+  fallback_reason: string | null;
+  strategy: RouteStrategy;
+  exclude_airport_line: boolean;
+  origin: PlannedStation;
+  destination: PlannedStation;
+  station_count: number;
+  /** False when both route preferences return the same journey. */
+  strategies_differ?: boolean;
+  /** Null when the planner publishes no timing, as BMRC's does not. */
+  total_time: string | null;
+  total_distance_km: number | null;
+  fare: PlannedFare;
+  legs: PlannedLeg[];
+  interchanges: PlannedInterchange[];
+  metro_service: ServiceTimes | null;
+  service_available: boolean | null;
+  ticket_available: boolean | null;
+  /**
+   * One link per network the journey rides. Missing on plans saved before
+   * this field existed.
+   */
+  bookings?: WhatsAppBooking[];
+}
+
+export interface StationByLineItem {
+  id: number;
+  station_name: string;
+  station_name_kn?: string;
+  station_code: string;
+  station_facility: StationFacility[];
+  interchange: boolean;
+  status: string;
+}
+
+export interface Platform {
+  platform_name: string;
+  train_towards: string | StationRef | null;
+  train_towards_second: string | StationRef | null;
+  platform_code: string | null;
+}
+
+export interface Gate {
+  gate_name: string;
+  gate_code: string | null;
+  location: string | null;
+  gate_latitude: number | null;
+  gate_longitude: number | null;
+  divyang_friendly: boolean | null;
+  status: string | null;
+}
+
+export interface Lift {
+  lift_type: string | null;
+  name: string | null;
+  description_location: string | null;
+  code: string | null;
+  status: string | boolean | number | null;
+}
+
+export interface StationDetail {
+  id: number;
+  station_code: string;
+  station_name: string;
+  station_name_kn?: string;
+  station_commercial_name: string | null;
+  station_description: string | null;
+  station_type: string | null;
+  interchange: boolean | null;
+  latitude: number | null;
+  longitude: number | null;
+  mobile: string | null;
+  landline: string | null;
+  station_status: Record<string, unknown>[];
+  metro_lines: MetroLine[];
+  prev_next_stations: Record<string, unknown>[];
+  station_facility: StationFacility[];
+  gates: Gate[];
+  lifts: Lift[];
+  platforms: Platform[];
+  stations_facilities: Record<string, unknown>[];
+  parkings: Record<string, unknown>[];
+  nearby_places: Record<string, unknown>[];
+  feeder: Record<string, unknown>[];
+  first_last_train: Record<string, unknown>[] | Record<string, unknown> | null;
+}

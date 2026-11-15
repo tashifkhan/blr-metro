@@ -1,0 +1,959 @@
+{
+ "lines": [
+  {
+   "code": "PL",
+   "name": "Purple Line",
+   "color": "#7B2D8E",
+   "network": "dmrc",
+   "stations": [
+    "WHTM",
+    "UWVL",
+    "KDGD",
+    "ITPL",
+    "SSHP",
+    "VDHP",
+    "KDNH",
+    "VWIA",
+    "DKIA",
+    "GDCP",
+    "MDVP",
+    "KRAM",
+    "JTPM",
+    "BYPH",
+    "SVRD",
+    "IDN",
+    "HLRU",
+    "TTY",
+    "MAGR",
+    "CBPK",
+    "VDSA",
+    "VSWA",
+    "KGWA",
+    "BRCS",
+    "MIRD",
+    "HSLI",
+    "VJN",
+    "AGPP",
+    "DJNR",
+    "MYRD",
+    "NYHM",
+    "RRRN",
+    "BGUC",
+    "PATG",
+    "MLSD",
+    "KGIT",
+    "CLGD"
+   ]
+  },
+  {
+   "code": "GL",
+   "name": "Green Line",
+   "color": "#1B8A3E",
+   "network": "dmrc",
+   "stations": [
+    "BIET",
+    "JIDL",
+    "MNJN",
+    "NGSA",
+    "DSH",
+    "JLHL",
+    "PYID",
+    "PEYA",
+    "YPI",
+    "YPM",
+    "SSFY",
+    "MHLI",
+    "RJNR",
+    "KVPR",
+    "SPRU",
+    "SPGD",
+    "KGWA",
+    "CKPE",
+    "KRMT",
+    "NLC",
+    "LBGH",
+    "SECE",
+    "JYN",
+    "RVR",
+    "BSNK",
+    "JPN",
+    "PUTH",
+    "APRC",
+    "KLPK",
+    "VJRH",
+    "TGTP",
+    "APTS"
+   ]
+  },
+  {
+   "code": "YL",
+   "name": "Yellow Line",
+   "color": "#F2C200",
+   "network": "dmrc",
+   "stations": [
+    "RVR",
+    "RGDT",
+    "JDHP",
+    "BTML",
+    "SBJT",
+    "HSRL",
+    "OFDC",
+    "MSRN",
+    "CKBR",
+    "BSRD",
+    "HOSR",
+    "ETCT",
+    "ECTN",
+    "HSKR",
+    "HBGI",
+    "BMSD"
+   ]
+  },
+  {
+   "code": "PK",
+   "name": "Pink Line",
+   "color": "#E31C79",
+   "network": "dmrc",
+   "stations": [
+    "SGRC",
+    "JDHP",
+    "JPNP",
+    "IIMB",
+    "HIMU",
+    "GTGR"
+   ]
+  }
+ ],
+ "stations": [
+  {
+   "code": "WHTM",
+   "name": "Whitefield",
+   "lat": 12.994381,
+   "lng": 77.757354,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "UWVL",
+   "name": "Channasandra",
+   "lat": 12.992125,
+   "lng": 77.750973,
+   "lines": [
+    "PL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "KDGD",
+   "name": "Kadugodi Tree Park",
+   "lat": 12.989869,
+   "lng": 77.744592,
+   "lines": [
+    "PL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "ITPL",
+   "name": "Pattandur Agrahara",
+   "lat": 12.987613,
+   "lng": 77.738211,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "SSHP",
+   "name": "Sri Sathya Sai Hospital",
+   "lat": 12.981152,
+   "lng": 77.727554,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "VDHP",
+   "name": "Nallur Halli",
+   "lat": 12.976528,
+   "lng": 77.724763,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "KDNH",
+   "name": "Kundala Halli",
+   "lat": 12.977461,
+   "lng": 77.715761,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "VWIA",
+   "name": "Seetharam Palya",
+   "lat": 12.981946,
+   "lng": 77.708126,
+   "lines": [
+    "PL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "DKIA",
+   "name": "Hoodi Junction",
+   "lat": 12.986431,
+   "lng": 77.700491,
+   "lines": [
+    "PL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "GDCP",
+   "name": "Garudachar Palya",
+   "lat": 12.990917,
+   "lng": 77.692855,
+   "lines": [
+    "PL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "MDVP",
+   "name": "Singayyanapalya",
+   "lat": 12.995402,
+   "lng": 77.68522,
+   "lines": [
+    "PL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "KRAM",
+   "name": "Krishna Raja Pura",
+   "lat": 12.999887,
+   "lng": 77.677585,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "JTPM",
+   "name": "Benngiganahalli",
+   "lat": 12.995302,
+   "lng": 77.665069,
+   "lines": [
+    "PL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "BYPH",
+   "name": "Baiyappanahalli",
+   "lat": 12.990716,
+   "lng": 77.652553,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "SVRD",
+   "name": "Swami Vivekananda Road",
+   "lat": 12.984507,
+   "lng": 77.645557,
+   "lines": [
+    "PL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "IDN",
+   "name": "Indiranagar",
+   "lat": 12.978299,
+   "lng": 77.638562,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "HLRU",
+   "name": "Halasuru",
+   "lat": 12.976412,
+   "lng": 77.626629,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "TTY",
+   "name": "Trinity",
+   "lat": 12.972999,
+   "lng": 77.617137,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "MAGR",
+   "name": "Mahathma Gandhi Road",
+   "lat": 12.976995,
+   "lng": 77.607313,
+   "lines": [
+    "PL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "CBPK",
+   "name": "Cubbon Park",
+   "lat": 12.980991,
+   "lng": 77.597488,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "VDSA",
+   "name": "Dr. B. R. Ambedkar Stn., Vidhana Soudha",
+   "lat": 12.979778,
+   "lng": 77.592349,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "VSWA",
+   "name": "Sir M Visveswaraya Station, Central College",
+   "lat": 12.974336,
+   "lng": 77.583889,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "KGWA",
+   "name": "Nadaprabhu Kempegowda Station, Majestic",
+   "lat": 12.975692,
+   "lng": 77.572836,
+   "lines": [
+    "PL",
+    "GL"
+   ]
+  },
+  {
+   "code": "BRCS",
+   "name": "Krantivira Sangolli Rayanna Railway Station",
+   "lat": 12.975912,
+   "lng": 77.565744,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "MIRD",
+   "name": "Magadi Road",
+   "lat": 12.975682,
+   "lng": 77.555413,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "HSLI",
+   "name": "Sri Balagangadharanatha Swamiji Stn., Hosahalli",
+   "lat": 12.974178,
+   "lng": 77.545538,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "VJN",
+   "name": "Vijayanagar",
+   "lat": 12.970806,
+   "lng": 77.537341,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "AGPP",
+   "name": "Attiguppe",
+   "lat": 12.962096,
+   "lng": 77.533705,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "DJNR",
+   "name": "Deepanjali Nagar",
+   "lat": 12.952181,
+   "lng": 77.537019,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "MYRD",
+   "name": "Mysore Road",
+   "lat": 12.946706,
+   "lng": 77.530049,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "NYHM",
+   "name": "Nayandanahalli",
+   "lat": 12.941692,
+   "lng": 77.524807,
+   "lines": [
+    "PL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "RRRN",
+   "name": "Rajarajeshwari Nagar",
+   "lat": 12.936678,
+   "lng": 77.519564,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "BGUC",
+   "name": "Jnanabharathi",
+   "lat": 12.935428,
+   "lng": 77.512172,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "PATG",
+   "name": "Pattanagere",
+   "lat": 12.924283,
+   "lng": 77.498262,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "MLSD",
+   "name": "Kengeri Bus Terminal",
+   "lat": 12.916112,
+   "lng": 77.487369,
+   "lines": [
+    "PL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "KGIT",
+   "name": "Kengeri",
+   "lat": 12.907941,
+   "lng": 77.476477,
+   "lines": [
+    "PL"
+   ]
+  },
+  {
+   "code": "CLGD",
+   "name": "Challaghatta",
+   "lat": 12.891599,
+   "lng": 77.454692,
+   "lines": [
+    "PL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "BIET",
+   "name": "Madavara",
+   "lat": 13.057414,
+   "lng": 77.472853,
+   "lines": [
+    "GL"
+   ]
+  },
+  {
+   "code": "JIDL",
+   "name": "Chikkabidarakallu",
+   "lat": 13.05376,
+   "lng": 77.483612,
+   "lines": [
+    "GL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "MNJN",
+   "name": "Manjunathanagar",
+   "lat": 13.050106,
+   "lng": 77.494372,
+   "lines": [
+    "GL"
+   ]
+  },
+  {
+   "code": "NGSA",
+   "name": "Nagasandra",
+   "lat": 13.046488,
+   "lng": 77.50211,
+   "lines": [
+    "GL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "DSH",
+   "name": "Dasarahalli",
+   "lat": 13.042871,
+   "lng": 77.509848,
+   "lines": [
+    "GL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "JLHL",
+   "name": "Jalahalli",
+   "lat": 13.039254,
+   "lng": 77.517585,
+   "lines": [
+    "GL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "PYID",
+   "name": "Peenya Industry",
+   "lat": 13.035636,
+   "lng": 77.525323,
+   "lines": [
+    "GL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "PEYA",
+   "name": "Peenya",
+   "lat": 13.032018,
+   "lng": 77.533061,
+   "lines": [
+    "GL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "YPI",
+   "name": "Goraguntepalya",
+   "lat": 13.028401,
+   "lng": 77.540799,
+   "lines": [
+    "GL"
+   ]
+  },
+  {
+   "code": "YPM",
+   "name": "Yeshwantpur",
+   "lat": 13.021572,
+   "lng": 77.547374,
+   "lines": [
+    "GL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "SSFY",
+   "name": "Sandal Soap Factory",
+   "lat": 13.014744,
+   "lng": 77.553949,
+   "lines": [
+    "GL"
+   ]
+  },
+  {
+   "code": "MHLI",
+   "name": "Mahalakshmi",
+   "lat": 13.008354,
+   "lng": 77.548775,
+   "lines": [
+    "GL"
+   ]
+  },
+  {
+   "code": "RJNR",
+   "name": "Rajajinagar",
+   "lat": 13.000353,
+   "lng": 77.549679,
+   "lines": [
+    "GL"
+   ]
+  },
+  {
+   "code": "KVPR",
+   "name": "Mahakavi Kuvempu road",
+   "lat": 12.998466,
+   "lng": 77.556943,
+   "lines": [
+    "GL"
+   ]
+  },
+  {
+   "code": "SPRU",
+   "name": "Srirampura",
+   "lat": 12.996499,
+   "lng": 77.563345,
+   "lines": [
+    "GL"
+   ]
+  },
+  {
+   "code": "SPGD",
+   "name": "Mantri Square Sampige Road",
+   "lat": 12.990244,
+   "lng": 77.570903,
+   "lines": [
+    "GL"
+   ]
+  },
+  {
+   "code": "CKPE",
+   "name": "Chickpete",
+   "lat": 12.967914,
+   "lng": 77.573695,
+   "lines": [
+    "GL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "KRMT",
+   "name": "Krishna Rajendra Market",
+   "lat": 12.960136,
+   "lng": 77.574554,
+   "lines": [
+    "GL"
+   ]
+  },
+  {
+   "code": "NLC",
+   "name": "National College",
+   "lat": 12.950612,
+   "lng": 77.573658,
+   "lines": [
+    "GL"
+   ]
+  },
+  {
+   "code": "LBGH",
+   "name": "Lalbagh",
+   "lat": 12.946312,
+   "lng": 77.579969,
+   "lines": [
+    "GL"
+   ]
+  },
+  {
+   "code": "SECE",
+   "name": "South End Circle",
+   "lat": 12.938318,
+   "lng": 77.580023,
+   "lines": [
+    "GL"
+   ]
+  },
+  {
+   "code": "JYN",
+   "name": "Jayanagar",
+   "lat": 12.929673,
+   "lng": 77.580103,
+   "lines": [
+    "GL"
+   ]
+  },
+  {
+   "code": "RVR",
+   "name": "Rashtreeya Vidyalaya Road",
+   "lat": 12.921573,
+   "lng": 77.580178,
+   "lines": [
+    "GL",
+    "YL"
+   ]
+  },
+  {
+   "code": "BSNK",
+   "name": "Banashankari",
+   "lat": 12.915538,
+   "lng": 77.573557,
+   "lines": [
+    "GL"
+   ]
+  },
+  {
+   "code": "JPN",
+   "name": "Jaya Prakash Nagar",
+   "lat": 12.905818,
+   "lng": 77.57183,
+   "lines": [
+    "GL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "PUTH",
+   "name": "Yelachenahalli",
+   "lat": 12.896099,
+   "lng": 77.570102,
+   "lines": [
+    "GL"
+   ]
+  },
+  {
+   "code": "APRC",
+   "name": "Konanakunte Cross",
+   "lat": 12.889889,
+   "lng": 77.561651,
+   "lines": [
+    "GL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "KLPK",
+   "name": "Doddakallasandra",
+   "lat": 12.883679,
+   "lng": 77.553199,
+   "lines": [
+    "GL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "VJRH",
+   "name": "Vajarahalli",
+   "lat": 12.877469,
+   "lng": 77.544748,
+   "lines": [
+    "GL"
+   ]
+  },
+  {
+   "code": "TGTP",
+   "name": "Thalaghattapura",
+   "lat": 12.869491,
+   "lng": 77.537301,
+   "lines": [
+    "GL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "APTS",
+   "name": "Silk Institute",
+   "lat": 12.861513,
+   "lng": 77.529853,
+   "lines": [
+    "GL"
+   ]
+  },
+  {
+   "code": "RGDT",
+   "name": "Ragigudda",
+   "lat": 12.917047,
+   "lng": 77.588261,
+   "lines": [
+    "YL"
+   ]
+  },
+  {
+   "code": "JDHP",
+   "name": "Jayadeva Hospital",
+   "lat": 12.916742,
+   "lng": 77.599955,
+   "lines": [
+    "YL",
+    "PK"
+   ]
+  },
+  {
+   "code": "BTML",
+   "name": "BTM Layout",
+   "lat": 12.916551,
+   "lng": 77.608807,
+   "lines": [
+    "YL"
+   ]
+  },
+  {
+   "code": "SBJT",
+   "name": "Central silk board",
+   "lat": 12.916473,
+   "lng": 77.620443,
+   "lines": [
+    "YL"
+   ]
+  },
+  {
+   "code": "HSRL",
+   "name": "Bommanahalli",
+   "lat": 12.907527,
+   "lng": 77.626577,
+   "lines": [
+    "YL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "OFDC",
+   "name": "Hongasandra",
+   "lat": 12.898582,
+   "lng": 77.632711,
+   "lines": [
+    "YL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "MSRN",
+   "name": "Kudlu Gate",
+   "lat": 12.889636,
+   "lng": 77.638846,
+   "lines": [
+    "YL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "CKBR",
+   "name": "Singasandra",
+   "lat": 12.88069,
+   "lng": 77.64498,
+   "lines": [
+    "YL"
+   ]
+  },
+  {
+   "code": "BSRD",
+   "name": "Hosa Road",
+   "lat": 12.863869,
+   "lng": 77.657841,
+   "lines": [
+    "YL"
+   ]
+  },
+  {
+   "code": "HOSR",
+   "name": "Beratena Agrahara",
+   "lat": 12.86385,
+   "lng": 77.65798,
+   "lines": [
+    "YL"
+   ]
+  },
+  {
+   "code": "ETCT",
+   "name": "Electronic City",
+   "lat": 12.846416,
+   "lng": 77.671118,
+   "lines": [
+    "YL"
+   ]
+  },
+  {
+   "code": "ECTN",
+   "name": "Infosys foundation Konappana Agrahara",
+   "lat": 12.842762,
+   "lng": 77.674233,
+   "lines": [
+    "YL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "HSKR",
+   "name": "Huskur Road",
+   "lat": 12.839108,
+   "lng": 77.677347,
+   "lines": [
+    "YL"
+   ]
+  },
+  {
+   "code": "HBGI",
+   "name": "Biocon Hebbagodi",
+   "lat": 12.8318,
+   "lng": 77.683576,
+   "lines": [
+    "YL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "BMSD",
+   "name": "Delta electronics Bommasandra",
+   "lat": 12.824492,
+   "lng": 77.689805,
+   "lines": [
+    "YL"
+   ],
+   "approx": true
+  },
+  {
+   "code": "SGRC",
+   "name": "SG Palya (Suddagunte Palya)",
+   "lat": 12.927073,
+   "lng": 77.596719,
+   "lines": [
+    "PK"
+   ],
+   "approx": true
+  },
+  {
+   "code": "JPNP",
+   "name": "NS Palya-JP Nagar 4th Phase",
+   "lat": 12.906411,
+   "lng": 77.603191,
+   "lines": [
+    "PK"
+   ],
+   "approx": true
+  },
+  {
+   "code": "IIMB",
+   "name": "Bilekahalli-I.I.M.B",
+   "lat": 12.896081,
+   "lng": 77.606428,
+   "lines": [
+    "PK"
+   ],
+   "approx": true
+  },
+  {
+   "code": "HIMU",
+   "name": "Hulimavu",
+   "lat": 12.88575,
+   "lng": 77.609664,
+   "lines": [
+    "PK"
+   ],
+   "approx": true
+  },
+  {
+   "code": "GTGR",
+   "name": "Kalena Agrahara",
+   "lat": 12.87542,
+   "lng": 77.6129,
+   "lines": [
+    "PK"
+   ],
+   "approx": true
+  }
+ ]
+}
