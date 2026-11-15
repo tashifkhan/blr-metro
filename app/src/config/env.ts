@@ -10,7 +10,7 @@ import { Platform } from 'react-native';
  * Web builds use their own origin unless this variable is set.
  */
 
-const DEFAULT_API_BASE_URL = 'https://blr-metro.vercel.app';
+const DEFAULT_API_BASE_URL = 'https://blr-metro.tashif.codes';
 
 /**
  * Normalize a configured base so path joining never doubles a trailing slash

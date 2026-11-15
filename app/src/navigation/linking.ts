@@ -14,6 +14,7 @@ import type { RootTabParamList } from './types';
  */
 export const navigationLinking: LinkingOptions<RootTabParamList> = {
   prefixes: [
+    'https://blr-metro.tashif.codes',
     'https://blr-metro.vercel.app',
     'http://localhost:8081',
     'http://localhost:19006',

@@ -7,7 +7,7 @@ bun install
 bun run start
 ```
 
-Native builds use `https://blr-metro.vercel.app` by default. Copy `.env.example` to `.env` to override the API for local development.
+Native builds use `https://blr-metro.tashif.codes` by default. Copy `.env.example` to `.env` to override the API for local development.
 
 ```bash
 EXPO_PUBLIC_API_BASE_URL=http://127.0.0.1:8091 bun run web

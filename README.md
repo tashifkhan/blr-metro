@@ -2,8 +2,8 @@
 
 A journey planner for Bengaluru, built with Expo and FastAPI. Station names and fares come from the public BMRCL service. The API computes routes from line order.
 
-- [Open the app](https://blr-metro.vercel.app)
-- [API documentation](https://blr-metro.vercel.app/docs)
+- [Open the app](https://blr-metro.tashif.codes)
+- [API documentation](https://blr-metro.tashif.codes/docs)
 - [Source](https://github.com/tashifkhan/blr-metro)
 
 The app has station search, line lists, an interactive network map, journey planning, Kannada station names, and BMRCL notices. Fares include token, smart card peak, smart card off-peak, and group tickets. It keeps saved catalogs and journeys for offline use and marks cached answers on screen.
@@ -50,6 +50,8 @@ bunx vercel --prod
 ```
 
 `vercel.json` builds the Expo site in `app/` and the Python function in `api/`. API paths and Swagger documentation reach FastAPI before the site fallback. Other page URLs load the app, including direct links to a station or journey. The browser calls `/api/v1` on the same domain, so no API URL environment variable is needed on Vercel.
+
+Cloudflare DNS points `blr-metro.tashif.codes` to the Vercel project through a DNS-only CNAME. Vercel serves HTTPS for the app and API. The `blr-metro.vercel.app` address also works.
 
 The GitHub repository connects to the Vercel project. Pushes to `main` deploy to production. Other branches get preview deployments.
 
