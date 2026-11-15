@@ -2,7 +2,11 @@
   "name": "blr-metro",
   "private": true,
   "scripts": {
-    "build": "cd app && bun install --frozen-lockfile && bun run build:web",
+    "build": "bun run --cwd app build:web",
     "vercel-build": "bun run build"
-  }
+  },
+  "packageManager": "bun@1.4.4",
+  "workspaces": [
+    "app"
+  ]
 }
