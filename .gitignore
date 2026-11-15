@@ -1,0 +1,17 @@
+.venv
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+*.pyc
+.vercel
+.env
+.env.*
+!.env.example
+.artifacts/
+node_modules/
+dist/
+.expo/
+web-build/
+.wrangler/
+*.tsbuildinfo
+.DS_Store

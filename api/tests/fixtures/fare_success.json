@@ -1,0 +1,20 @@
+{
+  "success": true,
+  "results": {
+    "Id": 7,
+    "FareZone": "F7",
+    "TValue": 70,
+    "PeakCSCValue": 66.5,
+    "CSCValue": 63,
+    "GTValue": 59.5,
+    "vStationCode": "WHTM",
+    "vTwoWheeler": 204,
+    "vFourWheeler": 0,
+    "vLCV": 0,
+    "area": 420,
+    "vStationName": "Whitefield",
+    "vStationNameK": "ವೈಟ್‌ಫೀಲ್ಡ್\r\n",
+    "resultMsg": "success"
+  },
+  "messages": "Results Available"
+}
