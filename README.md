@@ -1,36 +1,67 @@
-# blr-metro
+# Namma Metro
 
-A journey planner for Namma Metro. Separate from the Delhi app. One operator, one ticket, and the public BMRCL fare API.
+A journey planner for Bengaluru, built with Expo and FastAPI. Station names and fares come from the public BMRCL service. The API computes routes from line order.
 
-- `api/` is a FastAPI service. It fetches the live station list and the live fare, and it builds the route from line order because BMRCL does not return one.
-- `app/` is an Expo app. Plan, lines, the official maps, and the news list.
-- `docs/bmrc-api.md` is the note on what the upstream actually returns.
+- [Open the app](https://blr-metro.vercel.app)
+- [API documentation](https://blr-metro.vercel.app/docs)
+- [Source](https://github.com/tashifkhan/blr-metro)
 
-There is no travel time. We do not have one. First and last trains are not in this API either.
+The app has station search, line lists, an interactive network map, journey planning, Kannada station names, and BMRCL notices. Fares include token, smart card peak, smart card off-peak, and group tickets. It keeps saved catalogs and journeys for offline use and marks cached answers on screen.
 
-## API
+BMRCL does not return travel times, first or last trains, gates, or platforms through this API. The app leaves those fields empty. Station lists have a checked-in fallback. Fare requests require the live BMRCL service.
+
+## Run locally
+
+Start the API:
 
 ```bash
 cd api
 uv sync --group dev
-uv run uvicorn main:app --reload --port 8081
-uv run pytest
+uv run uvicorn main:app --reload --port 8091
 ```
 
-## App
+Start the app in another terminal:
 
 ```bash
 cd app
 bun install
-# point a device at the local API
-echo 'EXPO_PUBLIC_API_BASE_URL=http://127.0.0.1:8091' > .env
-bun run start
+EXPO_PUBLIC_API_BASE_URL=http://127.0.0.1:8091 bun run web
 ```
 
-The web build talks to its own origin. A Worker in `app/worker` proxies `/api` at the FastAPI host named by `API_ORIGIN`.
+For a physical device, use your computer's LAN address in `app/.env`, then run `bun run start`.
+
+## Verify
 
 ```bash
-cd app
+cd api
+uv run pytest -q
+cd ../app
+bunx tsc --noEmit
 bun run build:web
-# wrangler deploy, after API_ORIGIN and the hostname in wrangler.jsonc are real
 ```
+
+## Deploy to Vercel
+
+Deploy from the repository root:
+
+```bash
+bunx vercel link --project blr-metro
+bunx vercel --prod
+```
+
+`vercel.json` builds the Expo site in `app/` and the Python function in `api/`. API paths and Swagger documentation reach FastAPI before the site fallback. Other page URLs load the app, including direct links to a station or journey. The browser calls `/api/v1` on the same domain, so no API URL environment variable is needed on Vercel.
+
+The GitHub repository connects to the Vercel project. Pushes to `main` deploy to production. Other branches get preview deployments.
+
+## Repository
+
+- `api/` contains the BMRCL client, station catalog, route graph, fare cache, and tests.
+- `app/` contains the Expo app and the web install manifest.
+- `docs/bmrc-api.md` records the upstream API contract.
+- `app/worker/` is an optional Cloudflare deployment path for an externally hosted API.
+
+The app adapts the MIT-licensed [Delhi NCR Metro app](https://github.com/tashifkhan/delhi-metro).
+
+## License
+
+[MIT](LICENSE).

@@ -1,20 +1,20 @@
 # Namma Metro app
 
-Expo Router app for the API in `../api`. Expo SDK 58, `@expo/ui` for buttons, lists, the search field, and the map switch, Material 3 color roles. Tabs are Plan, Lines, Map, and News.
+Expo SDK 54 app with React Navigation, React Native Paper, and Material 3 colors. It runs on Android, iOS, and the web. Screens include journey planning, stations, lines, a network map, alerts, and appearance settings.
 
 ```bash
 bun install
-cp .env.example .env   # optional, for a device pointed at a local API
 bun run start
 ```
 
-Web export and the Worker:
+Native builds use `https://blr-metro.vercel.app` by default. Copy `.env.example` to `.env` to override the API for local development.
 
 ```bash
+EXPO_PUBLIC_API_BASE_URL=http://127.0.0.1:8091 bun run web
+bunx tsc --noEmit
 bun run build:web
-bun run preview:web
 ```
 
-`API_ORIGIN` in `wrangler.jsonc` is the FastAPI host. Set it before `bun run deploy:web`. The hostname is not pinned yet. Do not hang this off `ncr-metro.tashif.codes`.
+Vercel deploys the exported site and FastAPI together from the repository root. Web builds use the page origin for API requests. Leave `EXPO_PUBLIC_API_BASE_URL` unset in production.
 
-On web, leave `EXPO_PUBLIC_API_BASE_URL` unset. The page calls its own origin, and the Worker proxies `/api`.
+The optional Cloudflare Worker in `worker/` proxies API requests to `API_ORIGIN` in `wrangler.jsonc`. Set that value before using `bun run deploy:web`.

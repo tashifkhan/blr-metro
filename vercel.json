@@ -1,0 +1,58 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "builds": [
+    {
+      "src": "app/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    },
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python",
+      "config": {
+        "includeFiles": [
+          "api/data/**"
+        ],
+        "excludeFiles": [
+          "api/tests/**",
+          "api/.venv/**",
+          "app/**"
+        ]
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api(?:/.*)?",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/(?:docs(?:/.*)?|redoc|openapi.json)",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/sw.js",
+      "headers": {
+        "Cache-Control": "no-cache"
+      },
+      "continue": true
+    },
+    {
+      "src": "/_expo/static/(.*)",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      },
+      "continue": true
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/.*",
+      "dest": "/index.html"
+    }
+  ]
+}

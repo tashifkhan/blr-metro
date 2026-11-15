@@ -3,15 +3,14 @@ import { Platform } from 'react-native';
 /**
  * Runtime configuration.
  *
- * The default points at the local FastAPI process (no version suffix).
+ * Native builds default to the production API origin, with no version suffix.
  * Routes include their own `/api/v1` prefix.
  *
- * A localhost default is not reachable from a physical device or a release
- * build, so set `EXPO_PUBLIC_API_BASE_URL` in `app/.env` to the deployed
- * origin; see `.env.example`.
+ * Set `EXPO_PUBLIC_API_BASE_URL` in `app/.env` for local device development.
+ * Web builds use their own origin unless this variable is set.
  */
 
-const DEFAULT_API_BASE_URL = 'http://127.0.0.1:8091';
+const DEFAULT_API_BASE_URL = 'https://blr-metro.vercel.app';
 
 /**
  * Normalize a configured base so path joining never doubles a trailing slash
@@ -28,10 +27,8 @@ function normalizeApiBaseUrl(raw: string): string {
 }
 
 /**
- * On the web the app is served by a Worker that also reverse-proxies `/api/*`
- * to the backend, so the page's own origin is the API origin. Calling the
- * Vercel host directly from the browser would be a cross-origin request the
- * API does not allow.
+ * Vercel serves the web app and `/api/*` from one origin. The optional
+ * Cloudflare Worker also proxies those paths to its configured API origin.
  */
 function resolveApiBaseUrl(): string {
   const configured = process.env.EXPO_PUBLIC_API_BASE_URL;

@@ -1,0 +1,8 @@
+"""Vercel entry point for the API alongside the Expo web export."""
+
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from main import app  # noqa: E402, F401
