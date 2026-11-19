@@ -66,7 +66,9 @@ app.add_middleware(
 
 # One OTLP span per request when OTEL_EXPORTER_OTLP_ENDPOINT is set (Honeycomb
 # in production). Added last, so it is outermost and sees every response.
-app.add_middleware(AnalyticsMiddleware, api="blr-metro")
+# wait=True: the legacy @vercel/python builder in vercel.json ends the
+# invocation with the response, which would drop a background send.
+app.add_middleware(AnalyticsMiddleware, api="blr-metro", wait=True)
 
 
 @app.exception_handler(UpstreamApiError)
