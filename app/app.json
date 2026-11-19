@@ -2,7 +2,7 @@
   "expo": {
     "name": "Namma Metro",
     "slug": "blr-metro",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -53,7 +53,20 @@
           "savePhotosPermission": "Allow $(PRODUCT_NAME) to save metro maps.",
           "granularPermissions": []
         }
-      ]
-    ]
+      ],
+      "expo-font"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "1180a0a3-6688-42d3-a80a-d21cd31459d6"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/1180a0a3-6688-42d3-a80a-d21cd31459d6"
+    },
+    "owner": "khan_tashif"
   }
 }
