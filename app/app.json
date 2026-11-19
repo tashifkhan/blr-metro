@@ -24,8 +24,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "codes.tashif.blrmetro",
-      "versionCode": 1
+      "package": "codes.tashif.blrmetro"
     },
     "web": {
       "bundler": "metro",
