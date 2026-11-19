@@ -55,6 +55,24 @@ Cloudflare DNS points `blr-metro.tashif.codes` to the Vercel project through a D
 
 The GitHub repository connects to the Vercel project. Pushes to `main` deploy to production. Other branches get preview deployments.
 
+## Android release
+
+Pushing a `v*` tag runs `.github/workflows/release.yml`. It type-checks and tests the app, then builds an APK on EAS with the `github-release` profile in `app/eas.json`. It attaches `NammaMetro-<tag>.apk` to a GitHub release, with notes taken from that version's section of `CHANGELOG.md`. Last, it starts the F-Droid publish on `tashifkhan/tashif.codes`.
+
+The workflow needs two repository secrets:
+
+- `EXPO_TOKEN`, an Expo access token for the `khan_tashif` account.
+- `TASHIF_CODES_WORKFLOW_TOKEN`, a GitHub token with Actions read and write on `tashifkhan/tashif.codes`. The run fails without it, so a release can't skip F-Droid and still pass.
+
+To cut a release, bump `version` in `app/app.json` and `app/package.json`, add the section to `CHANGELOG.md`, then push the tag:
+
+```bash
+git tag v1.0.1
+git push origin v1.0.1
+```
+
+EAS keeps the signing key and raises `versionCode` on each build. Install from F-Droid by adding `https://tashif.codes/fdroid/repo`, or take the APK from the [latest release](https://github.com/tashifkhan/blr-metro/releases/latest).
+
 ## Repository
 
 - `api/` contains the BMRCL client, station catalog, route graph, fare cache, and tests.

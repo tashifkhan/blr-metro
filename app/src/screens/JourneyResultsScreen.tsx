@@ -1,6 +1,6 @@
 import { useHaptics } from '../hooks/useHaptics';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Platform, ScrollView, Share, StyleSheet, View } from 'react-native';
+import { Animated, PanResponder, Platform, ScrollView, Share, StyleSheet, View } from 'react-native';
 import { useRoute, useNavigation, useIsFocused } from '@react-navigation/native';
 import type { NavigationProp, RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -39,8 +39,14 @@ function inr(value: number): string {
   return `₹${Number.isInteger(value) ? value : value.toFixed(2)}`;
 }
 
-function webOrigin(): string | null {
-  return Platform.OS === 'web' && typeof window !== 'undefined' ? window.location.origin : null;
+/** Shared links open the website, so a phone without the app can follow them. */
+const PRODUCTION_ORIGIN = 'https://blr-metro.tashif.codes';
+
+/** The page's own origin on web, so preview deploys share preview links. */
+function shareOrigin(): string {
+  return Platform.OS === 'web' && typeof window !== 'undefined'
+    ? window.location.origin
+    : PRODUCTION_ORIGIN;
 }
 
 type ChipTone = 'accent' | 'tonal' | 'outline';
@@ -76,12 +82,13 @@ export function JourneyResultsScreen() {
   }, [navigation, fromCode, fromName, toCode, toName]);
 
   const handleShare = useCallback(() => {
-    const origin = webOrigin();
-    const url = `${origin ?? ''}/journey/${encodeURIComponent(fromCode)}/${encodeURIComponent(toCode)}`;
-    const message = origin
-      ? `${fromName} to ${toName} on Namma Metro: ${url}`
-      : `${fromName} to ${toName} on Namma Metro`;
-    Share.share({ message }).catch(() => undefined);
+    const url = `${shareOrigin()}/journey/${encodeURIComponent(fromCode)}/${encodeURIComponent(toCode)}`;
+    // iOS shows the url as a link preview, so it stays out of the message.
+    const content =
+      Platform.OS === 'ios'
+        ? { message: `${fromName} to ${toName} on Namma Metro`, url }
+        : { message: `${fromName} to ${toName} on Namma Metro: ${url}` };
+    Share.share(content).catch(() => undefined);
   }, [fromCode, toCode, fromName, toName]);
 
   useLayoutEffect(() => {
@@ -137,6 +144,42 @@ export function JourneyResultsScreen() {
 
   const { data: lines } = useMetroLinesQuery();
   const { data: allStations } = useStationSearchQuery('');
+
+  // A sideways swipe flips between the two strategies, but only when they
+  // give different routes. Otherwise the swipe would reload the same plan.
+  const swipeHint = useRef(new Animated.Value(0)).current;
+  const canSwipeRef = useRef(false);
+  canSwipeRef.current = plan?.strategies_differ === true;
+  const strategyRef = useRef(strategy);
+  strategyRef.current = strategy;
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gs) =>
+        canSwipeRef.current && Math.abs(gs.dx) > 12 && Math.abs(gs.dx) > Math.abs(gs.dy) * 1.5,
+      onPanResponderRelease: (_, gs) => {
+        if (!canSwipeRef.current) return;
+        const current = strategyRef.current;
+        const next: RouteStrategy | null =
+          gs.dx < -50 && current !== 'minimum-interchange'
+            ? 'minimum-interchange'
+            : gs.dx > 50 && current !== 'least-distance'
+              ? 'least-distance'
+              : null;
+        if (!next) return;
+        haptics.select();
+        setStrategy(next);
+        Animated.sequence([
+          Animated.timing(swipeHint, {
+            toValue: gs.dx < 0 ? -8 : 8,
+            duration: 120,
+            useNativeDriver: true,
+          }),
+          Animated.spring(swipeHint, { toValue: 0, useNativeDriver: true }),
+        ]).start();
+      },
+    }),
+  ).current;
 
   const stationCodeMap = useMemo(() => {
     const map = new Map<string, string>();
@@ -207,7 +250,10 @@ export function JourneyResultsScreen() {
     ];
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View
+      style={{ flex: 1, backgroundColor: theme.colors.background }}
+      {...(plan.strategies_differ === true ? panResponder.panHandlers : {})}
+    >
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={styles.content}
@@ -281,7 +327,9 @@ export function JourneyResultsScreen() {
             actually differ. */}
         {plan.strategies_differ === true ? (
           <Reveal index={1} replayOnFocus={false}>
-            <StrategyToggle active={strategy} onChange={setStrategy} />
+            <Animated.View style={{ transform: [{ translateX: swipeHint }] }}>
+              <StrategyToggle active={strategy} onChange={setStrategy} />
+            </Animated.View>
           </Reveal>
         ) : null}
 

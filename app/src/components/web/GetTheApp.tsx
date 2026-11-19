@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, View } from 'react-native';
+import { Linking, Platform, StyleSheet, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Text, useTheme } from 'react-native-paper';
 
@@ -8,6 +8,22 @@ import { Touchable } from '../Touchable';
 import { usePwaInstall } from '../../hooks/usePwaInstall';
 import { useAppTheme } from '../../theme/ThemeContext';
 import { emphasis, overline, radius, spacing } from '../../theme';
+
+/**
+ * Where the Android build is handed out.
+ *
+ * `tashif.codes/download/<project>` is the download space's own redirect, and
+ * it resolves to whatever the current release is. Pointing at it rather than
+ * at a release asset means a new build is reachable without a new web deploy.
+ * The signed builds also sit in the F-Droid repo at `tashif.codes/fdroid`, for
+ * anyone who would rather get updates that way.
+ */
+export const ANDROID_DOWNLOAD_URL = 'https://tashif.codes/download/blr-metro';
+
+/** Opens the Android download, and ignores a browser that refuses to. */
+export function openAndroidDownload() {
+  Linking.openURL(ANDROID_DOWNLOAD_URL).catch(() => {});
+}
 
 interface RowProps {
   icon: keyof typeof Ionicons.glyphMap;
@@ -135,11 +151,14 @@ export function GetTheApp() {
         ) : null}
 
         <Row
-          icon="phone-portrait-outline"
-          title="Android"
-          subtitle="No build yet. This site works in Chrome in the meantime"
+          icon="logo-android"
+          title="Download for Android"
+          subtitle="The latest release, straight from tashif.codes"
           accent={!install.canInstall}
-          trailing="soon"
+          trailing="download"
+          onPress={openAndroidDownload}
+          accessibilityRole="link"
+          accessibilityHint="Opens the latest release on tashif.codes"
         />
         {divider}
 

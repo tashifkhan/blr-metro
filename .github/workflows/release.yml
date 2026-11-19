@@ -1,0 +1,180 @@
+name: Build and Release APK
+
+# Builds a production APK with EAS, attaches it to a GitHub Release, then
+# dispatches the F-Droid publish workflow on tashif.codes.
+#
+# Required secrets:
+#   EXPO_TOKEN                    — Expo account token for EAS builds
+#   TASHIF_CODES_WORKFLOW_TOKEN   — PAT with actions:write on tashifkhan/tashif.codes.
+#                                   The run fails without it, so a release can't
+#                                   skip F-Droid and still pass.
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      TASHIF_CODES_WORKFLOW_TOKEN: ${{ secrets.TASHIF_CODES_WORKFLOW_TOKEN }}
+      TASHIF_CODES_REPO: tashifkhan/tashif.codes
+      RELEASE_TAG: ${{ github.ref_name }}
+
+    steps:
+      # Fail before the EAS build, so a release can't go out green and miss
+      # F-Droid because the token was never set.
+      - name: Check F-Droid token
+        run: |
+          if [ -z "$TASHIF_CODES_WORKFLOW_TOKEN" ]; then
+            echo "::error::TASHIF_CODES_WORKFLOW_TOKEN is not set on this repo."
+            echo "Add a fine-grained PAT with Actions read/write on tashifkhan/tashif.codes."
+            exit 1
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      # The app is a workspace of the root package, and bun.lock sits at the
+      # root. EAS finds the same lockfile when it uploads the project.
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Type check and test
+        working-directory: app
+        run: |
+          bunx tsc --noEmit
+          node --test tests/*.test.cjs
+
+      - name: Build APK on EAS
+        working-directory: app
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: eas build --platform android --profile github-release --non-interactive --wait
+
+      - name: Resolve APK artifact URL
+        id: apk
+        working-directory: app
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          BUILDS_JSON=$(eas build:list --platform android --status finished --build-profile github-release --git-commit-hash "${GITHUB_SHA}" --limit 1 --non-interactive --json)
+          APK_URL=$(echo "$BUILDS_JSON" | node -e "const fs = require('fs'); const data = JSON.parse(fs.readFileSync(0, 'utf8')); const build = Array.isArray(data) ? data[0] : null; if (!build) { console.error('No finished Android build found for this commit.'); process.exit(1); } const url = build?.artifacts?.applicationArchiveUrl || build?.artifacts?.buildUrl; if (!url) { console.error('No APK artifact URL found on the finished build.'); process.exit(1); } process.stdout.write(url);")
+          echo "apk_url=${APK_URL}" >> "$GITHUB_OUTPUT"
+
+      - name: Download APK
+        run: curl -L "${{ steps.apk.outputs.apk_url }}" -o "NammaMetro-${{ github.ref_name }}.apk"
+
+      - name: Build release notes from CHANGELOG
+        id: notes
+        run: |
+          set -euo pipefail
+          TAG="${{ github.ref_name }}"
+          VERSION="${TAG#v}"
+          NOTES_FILE="$RUNNER_TEMP/release-notes.md"
+          {
+            echo "## Namma Metro ${TAG}"
+            echo ""
+            echo "Production Android APK built with EAS (\`github-release\` profile)."
+            echo ""
+            echo "| | |"
+            echo "|---|---|"
+            echo "| **Package** | \`codes.tashif.blrmetro\` |"
+            echo "| **Tag** | \`${TAG}\` |"
+            echo ""
+            if [[ -f CHANGELOG.md ]]; then
+              # Extract the matching ## [x.y.z] section (Keep a Changelog).
+              python3 - "$VERSION" CHANGELOG.md <<'PY'
+          import re, sys
+          version, path = sys.argv[1], sys.argv[2]
+          text = open(path, encoding="utf-8").read()
+          pattern = rf"^## \[{re.escape(version)}\][^\n]*\n(.*?)(?=^## |\Z)"
+          match = re.search(pattern, text, flags=re.M | re.S)
+          if not match:
+              sys.exit(0)
+          body = match.group(1).strip()
+          if body:
+              print("### Release notes")
+              print()
+              print(body)
+              print()
+          PY
+            fi
+            echo "### Install"
+            echo ""
+            echo "- **F-Droid (recommended):** add \`https://tashif.codes/fdroid/repo\` in F-Droid → Settings → Repositories, then install **Namma Metro**."
+            echo "- **Direct APK:** download the \`.apk\` attached below (enable “Install unknown apps” if prompted)."
+            echo "- **Website:** https://tashif.codes/fdroid"
+            echo "- **Full changelog:** https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md"
+          } > "$NOTES_FILE"
+          echo "path=$NOTES_FILE" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: NammaMetro-${{ github.ref_name }}.apk
+          generate_release_notes: true
+          body_path: ${{ steps.notes.outputs.path }}
+          name: Namma Metro ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger tashif.codes F-Droid publish
+        env:
+          GH_TOKEN: ${{ env.TASHIF_CODES_WORKFLOW_TOKEN }}
+        run: |
+          set -euo pipefail
+          echo "Dispatching publish-fdroid.yml on $TASHIF_CODES_REPO for $RELEASE_TAG"
+          gh workflow run publish-fdroid.yml \
+            --repo "$TASHIF_CODES_REPO" \
+            --field source_repository="${{ github.repository }}" \
+            --field release_tag="$RELEASE_TAG" \
+            --field apk_pattern='NammaMetro-v*.apk'
+
+          sleep 3
+          RUN_URL="$(gh run list \
+            --repo "$TASHIF_CODES_REPO" \
+            --workflow=publish-fdroid.yml \
+            --limit 1 \
+            --json url \
+            --jq '.[0].url' || true)"
+          if [[ -n "${RUN_URL:-}" ]]; then
+            echo "F-Droid workflow: $RUN_URL"
+            {
+              echo "### F-Droid publish"
+              echo "Triggered: $RUN_URL"
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Summary
+        run: |
+          {
+            echo "## Namma Metro ${RELEASE_TAG}"
+            echo ""
+            echo "- APK: \`NammaMetro-${RELEASE_TAG}.apk\`"
+            echo "- Release: https://github.com/${{ github.repository }}/releases/tag/${RELEASE_TAG}"
+            echo "- F-Droid page: https://tashif.codes/fdroid"
+            echo "- F-Droid repo: https://tashif.codes/fdroid/repo"
+          } >> "$GITHUB_STEP_SUMMARY"
