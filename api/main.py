@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from clients.bmrc import bmrc_client
+from core.analytics import AnalyticsMiddleware
 from core.config import settings
 from core.errors import ApiRequestError, UpstreamApiError
 from routes import health, journeys, lines, maps, news, stations
@@ -62,6 +63,10 @@ app.add_middleware(
     allow_methods=["GET"],
     allow_headers=["*"],
 )
+
+# One OTLP span per request when OTEL_EXPORTER_OTLP_ENDPOINT is set (Honeycomb
+# in production). Added last, so it is outermost and sees every response.
+app.add_middleware(AnalyticsMiddleware, api="blr-metro")
 
 
 @app.exception_handler(UpstreamApiError)
