@@ -5,6 +5,7 @@ import { Text, useTheme } from 'react-native-paper';
 
 import type { RootTabParamList } from '../../navigation/types';
 import { Touchable } from '../Touchable';
+import { openAndroidDownload } from './GetTheApp';
 import { usePwaInstall } from '../../hooks/usePwaInstall';
 import { emphasis, radius, spacing } from '../../theme';
 
@@ -129,6 +130,29 @@ export function DesktopShell({ active, onSelect }: Props) {
             </View>
           </Touchable>
         ) : null}
+        <Touchable
+          radius={radius.card}
+          haptic="press"
+          onPress={openAndroidDownload}
+          accessibilityRole="link"
+          accessibilityLabel="Download for Android"
+          accessibilityHint="Opens the latest release on tashif.codes"
+          style={{ backgroundColor: theme.colors.secondaryContainer }}
+        >
+          <View style={styles.footerRow}>
+            <Ionicons
+              name="logo-android"
+              size={18}
+              color={theme.colors.onSecondaryContainer}
+            />
+            <Text
+              variant="labelLarge"
+              style={[emphasis.heavy, { color: theme.colors.onSecondaryContainer }]}
+            >
+              Get it on Android
+            </Text>
+          </View>
+        </Touchable>
         <View style={styles.footerNote}>
           <Ionicons name="logo-apple" size={13} color={theme.colors.onSurfaceVariant} />
           {/* Not the usual tracked capitals: they would print "IOS". */}
