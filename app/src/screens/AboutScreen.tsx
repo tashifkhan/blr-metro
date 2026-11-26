@@ -10,6 +10,7 @@ import { GetTheApp } from '../components/web/GetTheApp';
 import { apiClient } from '../api/client';
 import { useAppTheme } from '../theme/ThemeContext';
 import { spacing, radius, emphasis } from '../theme';
+import { useAdaptedStyles } from '../theme/useAdaptedStyles';
 
 interface SourceEntry {
   operator: string;
@@ -39,6 +40,7 @@ function LinkRow({
   subtitle: string;
   url: string;
 }) {
+  const styles = useAdaptedStyles(baseStyles);
   const theme = useTheme();
   const { fills } = useAppTheme();
 
@@ -73,6 +75,7 @@ function LinkRow({
 }
 
 function DetailRow({ label, value }: { label: string; value: string }) {
+  const styles = useAdaptedStyles(baseStyles);
   const theme = useTheme();
 
   return (
@@ -92,6 +95,7 @@ function DetailRow({ label, value }: { label: string; value: string }) {
 }
 
 export function AboutScreen() {
+  const styles = useAdaptedStyles(baseStyles);
   const theme = useTheme();
   const { fills } = useAppTheme();
 
@@ -150,6 +154,11 @@ export function AboutScreen() {
           changes a page or goes down, what you see here is wrong until it is fixed.
           Check the station or BMRCL before a journey that has to be right.
         </Text>
+        <Text variant="bodySmall" style={[styles.note, { color: theme.colors.onSurfaceVariant }]}>
+          The map's background shows real contours and water. Heights come from AWS
+          Terrain Tiles (SRTM). Lakes and rivers are © OpenStreetMap contributors, served
+          by OpenFreeMap, under the Open Database License.
+        </Text>
       </View>
 
       <View style={styles.section}>
@@ -186,7 +195,7 @@ export function AboutScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   content: {
     padding: spacing.base,
     paddingBottom: spacing['3xl'],

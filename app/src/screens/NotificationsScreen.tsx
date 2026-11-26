@@ -29,8 +29,6 @@ export function NotificationsScreen() {
   if (isLoading) {
     return <LoadingState message="Loading notices" subtitle="BMRCL passenger notices" />;
   }
-  if (isError && !data) return <ErrorState message="Couldn't load notices" onRetry={refetch} />;
-
   const count = data?.length ?? 0;
 
   const ListHeader = (
@@ -60,11 +58,18 @@ export function NotificationsScreen() {
         void refetch();
       }}
       ListEmptyComponent={
-        <EmptyState
-          title="No notices right now"
-          subtitle="BMRCL has no active passenger notices."
-          icon="notifications-off-outline"
-        />
+        isError ? (
+          <ErrorState
+            message="Couldn't load BMRCL notices"
+            onRetry={refetch}
+          />
+        ) : (
+          <EmptyState
+            title="No notices right now"
+            subtitle="BMRCL has no active passenger notices."
+            icon="notifications-off-outline"
+          />
+        )
       }
     />
   );

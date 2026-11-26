@@ -93,7 +93,7 @@ test('the canvas boot script follows a stored dark theme on a light OS', () => {
   });
 
   assert.equal(root.style.colorScheme, 'dark');
-  assert.equal(root.style.backgroundColor, '#000000');
+  assert.equal(root.style.backgroundColor, '#0e0d0d');
   assert.equal(created[0].id, 'app-browser-chrome');
   assert.match(created[0].textContent, /color-scheme:dark/);
 });
@@ -105,8 +105,13 @@ test('the canvas boot script follows a stored light theme on a dark OS', () => {
   });
 
   assert.equal(root.style.colorScheme, 'light');
-  assert.equal(root.style.backgroundColor, '#FDFCFF');
+  assert.equal(root.style.backgroundColor, '#f6f1e9');
   assert.match(created[0].textContent, /color-scheme:light/);
+});
+
+test('the canvas boot script keeps a saved Material background', () => {
+  const { root } = runCanvasBoot({ osDark: false, stored: { uiStyle: 'material' } });
+  assert.equal(root.style.backgroundColor, '#FDFCFF');
 });
 
 test('the html links the manifest and the touch icon it ships', () => {

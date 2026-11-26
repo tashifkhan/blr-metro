@@ -10,6 +10,7 @@ import { NetworkGeometryProvider } from './NetworkGeometryContext';
 import { NetworkMapCanvas, type NetworkMapHandle } from './NetworkMapCanvas';
 import { buildRouteOverlay } from './routeOverlay';
 import { useLiveGeometry } from './useLiveGeometry';
+import { useAdaptedStyles } from '../../theme/useAdaptedStyles';
 
 interface Props {
   legs: PlannedLeg[];
@@ -28,6 +29,7 @@ interface Props {
  * wheel zooms only with Ctrl or Cmd so the page keeps scrolling past it.
  */
 export function RouteMap({ legs, colorFor, height = 280, onOpenMap, style }: Props) {
+  const styles = useAdaptedStyles(baseStyles);
   const theme = useTheme();
   const { fills } = useAppTheme();
   const { geometry } = useLiveGeometry();
@@ -64,7 +66,7 @@ export function RouteMap({ legs, colorFor, height = 280, onOpenMap, style }: Pro
           route={overlay}
           fit={overlay.bounds}
           wheelZoom="modifier"
-          grid={false}
+          terrain={false}
           labelObstacles={obstacles}
         />
         <View style={styles.actions} pointerEvents="box-none">
@@ -92,7 +94,7 @@ export function RouteMap({ legs, colorFor, height = 280, onOpenMap, style }: Pro
 const CHIP_WIDTH = 140;
 const CHIP_HEIGHT = 36;
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   card: {
     borderRadius: 28,
     overflow: 'hidden',

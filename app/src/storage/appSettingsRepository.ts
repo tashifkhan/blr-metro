@@ -1,6 +1,14 @@
 import { getDb } from './database';
 import { DEFAULT_PALETTE_ID } from '../theme/palettes';
 import { readAnimationStyle, type AnimationStyle } from '../theme/animationPreferences';
+import {
+  DEFAULT_STUDIO_COLOR,
+  DEFAULT_UI_STYLE,
+  STUDIO_COMBOS,
+  UI_STYLES,
+  type StudioColorId,
+  type UiStyle,
+} from '../theme/studio';
 
 export type ThemeMode = 'system' | 'light' | 'dark';
 
@@ -11,6 +19,10 @@ export interface AppSettings {
   highContrast: boolean;
   hapticsEnabled: boolean;
   animationStyle: AnimationStyle;
+  /** Studio (taf.sh's default look), Material 3, or Plain. */
+  uiStyle: UiStyle;
+  /** Accent combo for Studio. */
+  studioColor: StudioColorId;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -20,6 +32,8 @@ export const DEFAULT_SETTINGS: AppSettings = {
   highContrast: false,
   hapticsEnabled: true,
   animationStyle: 'slide',
+  uiStyle: DEFAULT_UI_STYLE,
+  studioColor: DEFAULT_STUDIO_COLOR,
 };
 
 const THEME_MODES: ThemeMode[] = ['system', 'light', 'dark'];
@@ -39,18 +53,28 @@ function decode(rows: SettingRow[]): AppSettings {
 
   const themeMode = map.get('themeMode');
   const paletteId = map.get('paletteId');
+  const amoledDark = map.get('amoledDark') === 'true';
+  const highContrast = map.get('highContrast') === 'true';
+  const uiStyle = map.get('uiStyle');
+  const customizedMaterial = (paletteId && paletteId !== DEFAULT_PALETTE_ID) || amoledDark || highContrast;
 
   return {
     themeMode: THEME_MODES.includes(themeMode as ThemeMode)
       ? (themeMode as ThemeMode)
       : DEFAULT_SETTINGS.themeMode,
     paletteId: paletteId || DEFAULT_SETTINGS.paletteId,
-    amoledDark: map.get('amoledDark') === 'true',
-    highContrast: map.get('highContrast') === 'true',
+    amoledDark,
+    highContrast,
     // Absent key means a settings row written before this option existed;
     // haptics were on then, so they stay on.
     hapticsEnabled: map.get('hapticsEnabled') !== 'false',
     animationStyle: readAnimationStyle(map.get('animationStyle')),
+    uiStyle: UI_STYLES.includes(uiStyle as UiStyle)
+      ? (uiStyle as UiStyle)
+      : uiStyle === undefined && customizedMaterial ? 'material' : DEFAULT_SETTINGS.uiStyle,
+    studioColor: STUDIO_COMBOS.some((combo) => combo.id === map.get('studioColor'))
+      ? (map.get('studioColor') as StudioColorId)
+      : DEFAULT_SETTINGS.studioColor,
   };
 }
 
@@ -75,6 +99,8 @@ export const appSettingsRepository = {
       ['highContrast', String(settings.highContrast)],
       ['hapticsEnabled', String(settings.hapticsEnabled)],
       ['animationStyle', settings.animationStyle],
+      ['uiStyle', settings.uiStyle],
+      ['studioColor', settings.studioColor],
     ];
 
     await db.withTransactionAsync(async () => {

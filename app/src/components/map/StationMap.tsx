@@ -8,6 +8,7 @@ import { emphasis, radius, spacing } from '../../theme';
 import { NetworkGeometryProvider } from './NetworkGeometryContext';
 import { NetworkMapCanvas } from './NetworkMapCanvas';
 import { useLiveGeometry } from './useLiveGeometry';
+import { useAdaptedStyles } from '../../theme/useAdaptedStyles';
 
 interface Props {
   code: string;
@@ -31,6 +32,7 @@ const CHIP_HEIGHT = 36;
  * Renders nothing when the station isn't on the map.
  */
 export function StationMap({ code, height = 240, onOpenMap, onSelectStation, style }: Props) {
+  const styles = useAdaptedStyles(baseStyles);
   const theme = useTheme();
   const { fills } = useAppTheme();
   const { geometry } = useLiveGeometry();
@@ -75,7 +77,7 @@ export function StationMap({ code, height = 240, onOpenMap, onSelectStation, sty
           }}
           fit={fit}
           wheelZoom="modifier"
-          grid={false}
+          terrain={false}
           labelObstacles={obstacles}
         />
         {onOpenMap ? (
@@ -100,7 +102,7 @@ export function StationMap({ code, height = 240, onOpenMap, onSelectStation, sty
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   card: {
     borderRadius: 28,
     overflow: 'hidden',

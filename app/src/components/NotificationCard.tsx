@@ -9,6 +9,7 @@ import { useAppTheme } from '../theme/ThemeContext';
 import type { PassengerNotification } from '../types';
 import { spacing, shape, emphasis } from '../theme';
 import { duration } from '../theme/motion';
+import { useAdaptedStyles } from '../theme/useAdaptedStyles';
 
 /** Where the card sits in a segmented list; decides which corners are round. */
 export type NoticePosition = 'single' | 'first' | 'middle' | 'last';
@@ -37,8 +38,9 @@ export const NotificationCard = memo(function NotificationCard({
   notification,
   position = 'single',
 }: Props) {
+  const styles = useAdaptedStyles(baseStyles);
   const theme = useTheme();
-  const { fills } = useAppTheme();
+  const { fills, look, animationStyle } = useAppTheme();
   const haptics = useHaptics();
 
   const title = notification.title.trim();
@@ -50,8 +52,8 @@ export const NotificationCard = memo(function NotificationCard({
     void Linking.openURL(pdfUrl).catch(() => haptics.error());
   }, [pdfUrl, haptics]);
 
-  const outer = shape.xl;
-  const inner = shape.sm;
+  const outer = look.style === 'material' ? shape.xl : look.radius.hero;
+  const inner = look.style === 'material' ? shape.sm : 0;
   const top = position === 'single' || position === 'first' ? outer : inner;
   const bottom = position === 'single' || position === 'last' ? outer : inner;
   const corners = {
@@ -65,8 +67,13 @@ export const NotificationCard = memo(function NotificationCard({
 
   return (
     <Animated.View
-      layout={LinearTransition.duration(duration.medium2)}
-      style={[styles.container, corners, { backgroundColor: fills.containerLow }]}
+      layout={animationStyle === 'slide' ? LinearTransition.duration(duration.medium2) : undefined}
+      style={[
+        styles.container,
+        corners,
+        { backgroundColor: fills.containerLow },
+        look.edge === 'hairline' && { borderWidth: StyleSheet.hairlineWidth, borderColor: fills.hairline },
+      ]}
     >
       <Touchable
         onPress={pdfUrl ? handleOpen : undefined}
@@ -109,7 +116,7 @@ export const NotificationCard = memo(function NotificationCard({
                   size={13}
                   color={theme.colors.onSurfaceVariant}
                 />
-                <Text variant="labelMedium" style={{ color: theme.colors.onSurfaceVariant }}>
+                <Text variant="labelMedium" style={[look.figures, { color: theme.colors.onSurfaceVariant }]}>
                   {formatNoticeDate(notification.date)}
                 </Text>
               </View>
@@ -138,7 +145,7 @@ export const NotificationCard = memo(function NotificationCard({
   );
 });
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   container: {
     overflow: 'hidden',
   },

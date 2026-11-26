@@ -2,8 +2,8 @@
   "expo": {
     "name": "Namma Metro",
     "slug": "blr-metro",
-    "version": "1.0.0",
-    "orientation": "portrait",
+    "version": "1.1.0",
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -34,8 +34,8 @@
       "shortName": "Namma Metro",
       "description": "Journey planner, fares, and network maps for Bengaluru's Namma Metro.",
       "lang": "en",
-      "themeColor": "#6D28D9",
-      "backgroundColor": "#ffffff",
+      "themeColor": "#f6f1e9",
+      "backgroundColor": "#f6f1e9",
       "display": "standalone"
     },
     "plugins": [

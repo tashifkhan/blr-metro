@@ -29,6 +29,7 @@ import {
   notifyMapUnavailable,
   saveNetworkMap,
 } from '../../services/mapDownload';
+import { useAdaptedStyles } from '../../theme/useAdaptedStyles';
 
 const MIN_SCALE = 1;
 const MAX_SCALE = 5;
@@ -75,6 +76,7 @@ function HighResolutionMapImage({
   translateX,
   translateY,
 }: HighResolutionMapImageProps) {
+  const styles = useAdaptedStyles(baseStyles);
   const theme = useTheme();
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
@@ -142,6 +144,7 @@ function HighResolutionMapImage({
  * The schematic map screen switches to this from its layers button.
  */
 export function OfficialMapView() {
+  const styles = useAdaptedStyles(baseStyles);
   const isFocused = useIsFocused();
   const feedbackAllowed = useRef(isFocused);
   feedbackAllowed.current = isFocused;
@@ -427,7 +430,7 @@ export function OfficialMapView() {
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   container: {
     flex: 1,
   },

@@ -7,6 +7,7 @@ import type { PlannedLeg, PlannedStop } from '../types';
 import { useAppTheme } from '../theme/ThemeContext';
 import { spacing, radius, shape, emphasis, onColor } from '../theme';
 import { durationLabel, stationName } from '../utils/format';
+import { useAdaptedStyles } from '../theme/useAdaptedStyles';
 
 interface Props {
   leg: PlannedLeg;
@@ -42,6 +43,7 @@ export function RouteSegmentView({
   stationCodeMap,
   onStationPress,
 }: Props) {
+  const styles = useAdaptedStyles(baseStyles);
   const theme = useTheme();
   const { semantic, fills } = useAppTheme();
   const [expanded, setExpanded] = useState(false);
@@ -219,7 +221,7 @@ export function RouteSegmentView({
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     gap: TIMELINE.gap,

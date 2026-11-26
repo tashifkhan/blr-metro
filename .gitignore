@@ -16,3 +16,9 @@ web-build/
 *.tsbuildinfo
 .DS_Store
 .env*
+
+# Tiles downloaded by api/scripts/build_terrain.py
+api/scripts/.tile-cache/
+
+# Local release signing. Never commit.
+*.keystore.properties

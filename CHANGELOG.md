@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] — 2026-11-26
+
+- Plan, Map, Network, Saved and Alerts replace the old Search and Lines tabs. Network lists every line, and typing in its field switches to station matches. Old search and line links still open.
+- Save a place or a trip and start it again from Plan. Saved holds the full list.
+- Settings is its own page, with Appearance and About behind it. Appearance adds Studio and Plain beside Material, and each style keeps its own corners.
+- The network map draws terrain and water, with more detail as you zoom in.
+- The app rotates with the device. Portrait is no longer locked.
+
 ## [1.0.0] — 2026-11-20
 
 The first Android release. The same app has run at [blr-metro.tashif.codes](https://blr-metro.tashif.codes) since November. This version ships it as a signed APK on GitHub Releases and in the F-Droid repo at `tashif.codes/fdroid/repo`.
@@ -30,3 +38,7 @@ The first Android release. The same app has run at [blr-metro.tashif.codes](http
 ### Known gaps
 
 - BMRCL publishes no travel times, first or last trains, gates or platforms, so the app leaves those out rather than guess.
+
+[Unreleased]: https://github.com/tashifkhan/blr-metro/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/tashifkhan/blr-metro/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/tashifkhan/blr-metro/releases/tag/v1.0.0
