@@ -15,21 +15,20 @@ import { RootTabs } from './src/navigation/RootTabs';
 import { DesktopRoot } from './src/navigation/DesktopRoot';
 import { navigationLinking } from './src/navigation/linking';
 import { MetroNetworkProvider, useMetroNetwork } from './src/network';
+import { SavedProvider, useSaved } from './src/saved/SavedContext';
 
 const container = createServiceContainer(apiClient);
 
 function AppNavigation() {
   const { isLoaded } = useMetroNetwork();
+  const { loaded: savedLoaded } = useSaved();
   const isDesktop = useIsDesktop();
 
-  if (!isLoaded) {
+  if (!isLoaded || !savedLoaded) {
     return null;
   }
 
-  // Each stack keys itself by network, so a switch pops that page to its
-  // root without remounting the shell or losing the selected tab. The layout
-  // key only separates the two shells so resize swaps reset navigators
-  // rather than re-parenting routes across layouts.
+  // Give the desktop and mobile shells their own navigators.
   if (isDesktop) {
     return <DesktopRoot key="desktop" />;
   }
@@ -69,7 +68,9 @@ export default function App() {
         <MetroNetworkProvider>
           <DIProvider container={container}>
             <QueryClientProvider client={queryClient}>
-              <AppInner />
+              <SavedProvider>
+                <AppInner />
+              </SavedProvider>
             </QueryClientProvider>
           </DIProvider>
         </MetroNetworkProvider>

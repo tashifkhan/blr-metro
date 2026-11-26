@@ -12,6 +12,8 @@ import { EmptyState } from './EmptyState';
 import { useStationSearchQuery } from '../hooks';
 import { useIsDesktop } from '../hooks/useIsDesktop';
 import { spacing, radius, emphasis } from '../theme';
+import { useAppTheme } from '../theme/ThemeContext';
+import { useAdaptedStyles } from '../theme/useAdaptedStyles';
 import type { StationSearchResult } from '../types';
 
 interface Props {
@@ -24,10 +26,12 @@ interface Props {
 
 /**
  * Full-height sheet for picking a station: title and close button, the same
- * search bar as the Search tab, then the segmented result list.
+ * search bar as the Network tab, then the station results.
  */
 export function StationPicker({ visible, onSelect, onClose, title = 'Choose a station', selectedCode }: Props) {
+  const styles = useAdaptedStyles(baseStyles);
   const theme = useTheme();
+  const { animationStyle } = useAppTheme();
   const haptics = useHaptics();
   const insets = useSafeAreaInsets();
   const isDesktop = useIsDesktop();
@@ -54,7 +58,7 @@ export function StationPicker({ visible, onSelect, onClose, title = 'Choose a st
   return (
     <Modal
       visible={visible}
-      animationType="slide"
+      animationType={animationStyle}
       presentationStyle="pageSheet"
       onRequestClose={handleClose}
       transparent={isDesktop}
@@ -135,7 +139,7 @@ export function StationPicker({ visible, onSelect, onClose, title = 'Choose a st
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   backdrop: {
     flex: 1,
   },

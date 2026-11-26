@@ -1,6 +1,6 @@
 import { useHaptics } from '../hooks/useHaptics';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Animated, PanResponder, Platform, ScrollView, Share, StyleSheet, View } from 'react-native';
+import { AccessibilityInfo, Animated, PanResponder, Platform, ScrollView, Share, StyleSheet, View } from 'react-native';
 import { useRoute, useNavigation, useIsFocused } from '@react-navigation/native';
 import type { NavigationProp, RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -22,11 +22,13 @@ import { ErrorState } from '../components/ErrorState';
 import { StationPicker } from '../components/StationPicker';
 import { Reveal } from '../components/Reveal';
 import { RouteMap } from '../components/map/RouteMap';
+import { useSaved } from '../saved/SavedContext';
 import { useAppTheme } from '../theme/ThemeContext';
 import type { RouteStrategy } from '../types';
 import type { HomeStackParamList, RootTabParamList } from '../navigation/types';
-import { spacing, emphasis, tabular } from '../theme';
+import { spacing, emphasis } from '../theme';
 import { stationName } from '../utils/format';
+import { useAdaptedStyles } from '../theme/useAdaptedStyles';
 
 type Nav = NativeStackNavigationProp<HomeStackParamList, 'JourneyResults'>;
 type Route = RouteProp<HomeStackParamList, 'JourneyResults'>;
@@ -52,6 +54,7 @@ function shareOrigin(): string {
 type ChipTone = 'accent' | 'tonal' | 'outline';
 
 export function JourneyResultsScreen() {
+  const styles = useAdaptedStyles(baseStyles);
   const haptics = useHaptics();
   const route = useRoute<Route>();
   const isFocused = useIsFocused();
@@ -59,7 +62,8 @@ export function JourneyResultsScreen() {
   const navigation = useNavigation<Nav>();
   const { fromCode, toCode } = route.params;
   const theme = useTheme();
-  const { fills } = useAppTheme();
+  const { fills, look } = useAppTheme();
+  const saved = useSaved();
   const [strategy, setStrategy] = useState<RouteStrategy>(
     route.params.strategy ?? 'least-distance',
   );
@@ -91,6 +95,14 @@ export function JourneyResultsScreen() {
     Share.share(content).catch(() => undefined);
   }, [fromCode, toCode, fromName, toName]);
 
+  const isSaved = saved.isTripSaved(fromCode, toCode);
+  const canSave = Boolean(plan && !isPlaceholderData);
+  const handleSave = useCallback(() => {
+    const nowSaved = saved.toggleTrip({ code: fromCode, name: fromName }, { code: toCode, name: toName });
+    haptics.press();
+    AccessibilityInfo.announceForAccessibility(nowSaved ? 'Trip saved' : 'Trip removed from Saved');
+  }, [saved, fromCode, fromName, toCode, toName, haptics]);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: ({ tintColor }) => (
@@ -105,6 +117,13 @@ export function JourneyResultsScreen() {
             }}
           />
           <Appbar.Action
+            icon={({ size, color }) => <Ionicons name={isSaved ? 'bookmark' : 'bookmark-outline'} size={size} color={color} />}
+            color={tintColor}
+            accessibilityLabel={isSaved ? 'Remove saved trip' : 'Save this trip'}
+            disabled={!canSave && !isSaved}
+            onPress={handleSave}
+          />
+          <Appbar.Action
             icon={({ size, color }) => <Ionicons name="share-outline" size={size} color={color} />}
             color={tintColor}
             accessibilityLabel="Share this route"
@@ -113,7 +132,7 @@ export function JourneyResultsScreen() {
         </>
       ),
     });
-  }, [navigation, handleSwapStations, handleShare, haptics]);
+  }, [navigation, handleSwapStations, handleShare, handleSave, canSave, isSaved, haptics]);
 
   const handleStationSelect = useCallback(
     (station: { code: string; name: string }) => {
@@ -244,7 +263,7 @@ export function JourneyResultsScreen() {
       {
         key: 'stations',
         icon: 'ellipsis-horizontal',
-        text: `${plan.station_count} stations`,
+        text: `${plan.station_count} ${plan.station_count === 1 ? 'station' : 'stations'}`,
         tone: 'outline',
       },
     ];
@@ -313,7 +332,7 @@ export function JourneyResultsScreen() {
                   {chip.tone !== 'outline' ? (
                     <Ionicons name={chip.icon} size={16} color={fg} />
                   ) : null}
-                  <Text variant="labelLarge" style={[emphasis.strong, tabular, { color: fg }]}>
+                  <Text variant="labelLarge" style={[emphasis.strong, look.figures, { color: fg }]}>
                     {chip.text}
                   </Text>
                 </View>
@@ -417,7 +436,7 @@ export function JourneyResultsScreen() {
                 </View>
                 <Text
                   variant="titleSmall"
-                  style={[emphasis.strong, tabular, { color: theme.colors.onSurface }]}
+                  style={[emphasis.strong, look.figures, { color: theme.colors.onSurface }]}
                 >
                   {row.value}
                 </Text>
@@ -444,7 +463,7 @@ export function JourneyResultsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   content: {
     paddingHorizontal: spacing.base,
     paddingTop: spacing.xs,

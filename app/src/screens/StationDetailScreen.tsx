@@ -20,6 +20,7 @@ import type { HomeStackParamList, RootTabParamList } from '../navigation/types';
 import type { StationDetail } from '../types';
 import { spacing, shape, radius, emphasis, tabular, duration, easing } from '../theme';
 import { clockTime, stationName } from '../utils/format';
+import { useAdaptedStyles } from '../theme/useAdaptedStyles';
 
 type Route = RouteProp<HomeStackParamList, 'StationDetail'>;
 type Nav = NativeStackNavigationProp<HomeStackParamList, 'StationDetail'>;
@@ -291,12 +292,12 @@ function placeIcon(type: string): IconName {
 // Building blocks
 // ---------------------------------------------------------------------------
 
-function corners(first: boolean, last: boolean) {
+function corners(first: boolean, last: boolean, outer: number, inner: number) {
   return {
-    borderTopLeftRadius: first ? OUTER : INNER,
-    borderTopRightRadius: first ? OUTER : INNER,
-    borderBottomLeftRadius: last ? OUTER : INNER,
-    borderBottomRightRadius: last ? OUTER : INNER,
+    borderTopLeftRadius: first ? outer : inner,
+    borderTopRightRadius: first ? outer : inner,
+    borderBottomLeftRadius: last ? outer : inner,
+    borderBottomRightRadius: last ? outer : inner,
   };
 }
 
@@ -316,8 +317,11 @@ interface RowProps {
  * "Show all" tile.
  */
 function Group({ rows, limit = PREVIEW }: { rows: RowProps[]; limit?: number }) {
+  const styles = useAdaptedStyles(baseStyles);
   const theme = useTheme();
-  const { fills } = useAppTheme();
+  const { fills, look } = useAppTheme();
+  const outer = look.style === 'material' ? OUTER : look.radius.hero;
+  const inner = look.style === 'material' ? INNER : 0;
   const [open, setOpen] = useState(false);
   const foldable = rows.length > limit + 1;
   const shown = foldable && !open ? rows.slice(0, limit) : rows;
@@ -349,7 +353,7 @@ function Group({ rows, limit = PREVIEW }: { rows: RowProps[]; limit?: number }) 
             ) : null}
           </View>
         );
-        const style = [corners(first, last), { backgroundColor: fills.containerLow }];
+        const style = [corners(first, last, outer, inner), { backgroundColor: fills.containerLow }];
         return row.onPress ? (
           <Touchable
             key={`${row.title}-${index}`}
@@ -373,7 +377,7 @@ function Group({ rows, limit = PREVIEW }: { rows: RowProps[]; limit?: number }) 
           onPress={() => setOpen((v) => !v)}
           accessibilityState={{ expanded: open }}
           accessibilityLabel={open ? 'Show fewer' : `Show all ${rows.length}`}
-          style={[corners(false, true), { backgroundColor: fills.containerLow }]}
+          style={[corners(false, true, outer, inner), { backgroundColor: fills.containerLow }]}
         >
           <View style={styles.more}>
             <Ionicons name={open ? 'chevron-up' : 'chevron-down'} size={18} color={theme.colors.primary} />
@@ -394,6 +398,7 @@ function Pill({
   label: string;
   tone: 'good' | 'bad' | 'neutral';
 }) {
+  const styles = useAdaptedStyles(baseStyles);
   const theme = useTheme();
   const { semantic, fills } = useAppTheme();
   const bg =
@@ -414,6 +419,7 @@ function Pill({
 }
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
+  const styles = useAdaptedStyles(baseStyles);
   return (
     <View style={styles.section}>
       <SectionHeader title={title} />
@@ -427,11 +433,12 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 // ---------------------------------------------------------------------------
 
 export function StationDetailScreen() {
+  const styles = useAdaptedStyles(baseStyles);
   const route = useRoute<Route>();
   const navigation = useNavigation<Nav>();
   const { stationCode } = route.params;
   const theme = useTheme();
-  const { fills, animationStyle } = useAppTheme();
+  const { fills, animationStyle, look } = useAppTheme();
   const { data, isLoading, isError, isOfflineCopy, refetch } = useStationDetailQuery(stationCode);
 
   // The page opens on the summary card. Everything else waits behind "More
@@ -759,7 +766,12 @@ export function StationDetailScreen() {
                 key={line.key}
                 style={[
                   styles.lineCard,
-                  corners(index === 0, index === derived.neighbours.length - 1),
+                  corners(
+                    index === 0,
+                    index === derived.neighbours.length - 1,
+                    look.style === 'material' ? OUTER : look.radius.hero,
+                    look.style === 'material' ? INNER : 0,
+                  ),
                   { backgroundColor: fills.containerLow },
                 ]}
               >
@@ -953,7 +965,7 @@ export function StationDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   content: {
     padding: spacing.base,
     paddingTop: spacing.xs,

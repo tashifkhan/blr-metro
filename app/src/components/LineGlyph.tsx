@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { onColor } from '../theme';
+import { useAppTheme } from '../theme/ThemeContext';
 import { stationName } from '../utils/format';
 import type { MetroLine } from '../types';
 
@@ -55,11 +56,13 @@ interface Props {
 
 /** Rounded-square badge in the line colour carrying its number or letter. */
 export function LineGlyph({ color, glyph, size = 40 }: Props) {
+  const { look } = useAppTheme();
+  const borderRadius = look.style === 'material' ? Math.round(size * 0.32) : look.radius.badge;
   return (
     <View
       style={[
         styles.badge,
-        { width: size, height: size, borderRadius: Math.round(size * 0.32), backgroundColor: color },
+        { width: size, height: size, borderRadius, backgroundColor: color },
       ]}
     >
       <Text

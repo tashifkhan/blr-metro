@@ -9,6 +9,7 @@ import { emphasis, onColor, radius, spacing } from '../../theme';
 import { stationName } from '../../utils/format';
 import type { StationDetail } from '../../types';
 import { LINE_BY_CODE, shortLineName, type MapStation } from './networkData';
+import { useAdaptedStyles } from '../../theme/useAdaptedStyles';
 
 interface Props {
   station: MapStation;
@@ -66,6 +67,7 @@ function facilityChips(detail: StationDetail | undefined): { icon: keyof typeof 
  * first and last train, what the station has, and the two next steps.
  */
 export function StationSheet({ station, onClose, onDetails, onRouteFromHere }: Props) {
+  const styles = useAdaptedStyles(baseStyles);
   const theme = useTheme();
   const { fills } = useAppTheme();
   const { data: detail, isLoading: detailLoading } = useStationDetailQuery(station.code);
@@ -206,7 +208,7 @@ export function StationSheet({ station, onClose, onDetails, onRouteFromHere }: P
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   sheet: {
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,

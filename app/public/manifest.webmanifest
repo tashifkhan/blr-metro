@@ -14,8 +14,8 @@
     "browser"
   ],
   "orientation": "any",
-  "theme_color": "#6D28D9",
-  "background_color": "#ffffff",
+  "theme_color": "#f6f1e9",
+  "background_color": "#f6f1e9",
   "categories": [
     "travel",
     "navigation",
@@ -67,9 +67,9 @@
       ]
     },
     {
-      "name": "Search stations",
-      "short_name": "Search",
-      "url": "/search",
+      "name": "Lines and stations",
+      "short_name": "Network",
+      "url": "/lines",
       "icons": [
         {
           "src": "/icons/icon-192.png",

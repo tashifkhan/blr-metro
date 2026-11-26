@@ -30,6 +30,7 @@ import { useAppTheme } from '../theme/ThemeContext';
 import { emphasis, onColor, radius, spacing } from '../theme';
 import { stationName } from '../utils/format';
 import type { MapStackParamList, RootTabParamList } from '../navigation/types';
+import { useAdaptedStyles } from '../theme/useAdaptedStyles';
 
 type Nav = NativeStackNavigationProp<MapStackParamList, 'MetroMap'>;
 
@@ -57,10 +58,11 @@ const NOTE_MS = 4_000;
  * its lines, first and last train, facilities, and "Route from here".
  */
 export function MetroMapScreen() {
+  const styles = useAdaptedStyles(baseStyles);
   const navigation = useNavigation<Nav>();
   const insets = useSafeAreaInsets();
   const theme = useTheme();
-  const { fills } = useAppTheme();
+  const { fills, look } = useAppTheme();
   const haptics = useHaptics();
   const mapRef = useRef<NetworkMapHandle>(null);
 
@@ -261,18 +263,18 @@ export function MetroMapScreen() {
           <Touchable
             radius={radius.pill}
             onPress={() => setMode('schematic')}
-            accessibilityLabel="Back to the line map"
+            accessibilityLabel="Back to the interactive map"
             style={{ backgroundColor: fills.containerHigh }}
           >
             <View style={styles.officialBack}>
               <Ionicons name="arrow-back" size={20} color={theme.colors.onSurface} />
               <Text variant="labelLarge" style={[emphasis.strong, { color: theme.colors.onSurface }]}>
-                Line map
+                Interactive map
               </Text>
             </View>
           </Touchable>
           <Text variant="titleMedium" style={[emphasis.strong, styles.officialTitle, { color: theme.colors.onSurface }]}>
-            Official map
+            Official maps
           </Text>
           <View accessibilityElementsHidden importantForAccessibility="no">
             <BrandMark size={36} />
@@ -399,7 +401,7 @@ export function MetroMapScreen() {
       {!(searching && matches.length > 0) ? (
         <View style={[styles.fabs, { top: top + SEARCH_HEIGHT + spacing.xl }]} pointerEvents="box-none">
           <Touchable
-            radius={18}
+            radius={look.style === 'material' ? 18 : look.radius.icon}
             onPress={handleNearMe}
             accessibilityLabel={Platform.OS === 'web' ? 'Show stations near me' : 'Recentre the map'}
             style={[styles.fab, { backgroundColor: theme.colors.primaryContainer }]}
@@ -413,12 +415,12 @@ export function MetroMapScreen() {
             </View>
           </Touchable>
           <Touchable
-            radius={18}
+            radius={look.style === 'material' ? 18 : look.radius.icon}
             onPress={() => {
               setSelectedCode(null);
               setMode('official');
             }}
-            accessibilityLabel="Show the official map image"
+            accessibilityLabel="Show official maps"
             style={[styles.fab, styles.fabRight, { backgroundColor: fills.containerHigh }]}
           >
             {/* An image of the published map, so the icon is a picture, not layers. */}
@@ -426,7 +428,7 @@ export function MetroMapScreen() {
               <Ionicons name="image-outline" size={22} color={theme.colors.onSurface} />
               {wide ? (
                 <Text variant="labelLarge" style={[emphasis.strong, { color: theme.colors.onSurface }]}>
-                  Official map
+                  Official maps
                 </Text>
               ) : null}
             </View>
@@ -506,7 +508,7 @@ export function MetroMapScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   fill: {
     flex: 1,
   },
@@ -680,5 +682,6 @@ const styles = StyleSheet.create({
   },
   officialTitle: {
     flex: 1,
+    flexShrink: 1,
   },
 });

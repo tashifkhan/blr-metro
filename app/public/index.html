@@ -46,11 +46,11 @@
       */
       html {
         color-scheme: light;
-        background-color: #FDFCFF;
+        background-color: #f6f1e9;
       }
       html,
       body {
-        background-color: #FDFCFF;
+        background-color: #f6f1e9;
       }
       @media (prefers-color-scheme: dark) {
         html {
@@ -58,7 +58,7 @@
         }
         html,
         body {
-          background-color: #000;
+          background-color: #0e0d0d;
         }
       }
       /* These styles disable body scrolling if you are using <ScrollView> */
@@ -80,6 +80,7 @@
         // flash white, and the default (system) scheme does not clobber it
         // for a frame. Key: `src/storage/appSettingsRepository.web.ts`.
         var dark = false;
+        var material = false;
         try {
           dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
           var raw = localStorage.getItem('dmrc:appSettings');
@@ -87,9 +88,13 @@
             var settings = JSON.parse(raw);
             if (settings.themeMode === 'dark') dark = true;
             else if (settings.themeMode === 'light') dark = false;
+            material = settings.uiStyle === 'material' || (settings.uiStyle === undefined && (
+              (settings.paletteId && settings.paletteId !== 'metro') ||
+              settings.amoledDark === true || settings.highContrast === true
+            ));
           }
         } catch (e) {}
-        var bg = dark ? '#000000' : '#FDFCFF';
+        var bg = dark ? (material ? '#000000' : '#0e0d0d') : (material ? '#FDFCFF' : '#f6f1e9');
         var scheme = dark ? 'dark' : 'light';
         document.documentElement.style.colorScheme = scheme;
         document.documentElement.style.backgroundColor = bg;

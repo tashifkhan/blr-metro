@@ -14,15 +14,16 @@ import { Touchable } from '../components/Touchable';
 import { LineGlyph, lineGlyph, lineSubtitle, lineTitle, terminalName } from '../components/LineGlyph';
 import { useAppTheme } from '../theme/ThemeContext';
 import type { MetroLine } from '../types';
-import type { LinesStackParamList } from '../navigation/types';
+import type { NetworkStackParamList } from '../navigation/types';
 import { spacing, shape, emphasis } from '../theme';
 
-type Nav = NativeStackNavigationProp<LinesStackParamList, 'MetroLines'>;
+type Nav = NativeStackNavigationProp<NetworkStackParamList, 'Network'>;
 
 function LineRow({ line, first, last }: { line: MetroLine; first: boolean; last: boolean }) {
   const navigation = useNavigation<Nav>();
   const theme = useTheme();
-  const { fills } = useAppTheme();
+  const { fills, look } = useAppTheme();
+  const material = look.style === 'material';
 
   const title = lineTitle(line);
   const subtitle = lineSubtitle(line);
@@ -31,7 +32,7 @@ function LineRow({ line, first, last }: { line: MetroLine; first: boolean; last:
 
   return (
     <Touchable
-      radius={shape.sm}
+      radius={material ? shape.sm : 0}
       onPress={() =>
         navigation.navigate('LineStations', {
           lineCode: line.line_code,
@@ -40,12 +41,14 @@ function LineRow({ line, first, last }: { line: MetroLine; first: boolean; last:
         })
       }
       accessibilityLabel={`${title}, ${from} to ${to}`}
-      style={[
-        styles.row,
-        { backgroundColor: fills.containerLow },
-        first && styles.rowFirst,
-        last && styles.rowLast,
-      ]}
+      style={material
+        ? [
+            styles.row,
+            { backgroundColor: fills.containerLow },
+            first && styles.rowFirst,
+            last && styles.rowLast,
+          ]
+        : { borderTopWidth: first ? 0 : StyleSheet.hairlineWidth, borderTopColor: fills.hairline }}
     >
       <View style={styles.rowInner}>
         <LineGlyph color={line.primary_color_code} glyph={lineGlyph(line)} />
@@ -92,7 +95,16 @@ export function MetroLinesScreen() {
   const { data, isLoading, isError, isOfflineCopy, refetch, isRefetching } =
     useMetroLinesQuery();
   const theme = useTheme();
+  const { fills, look } = useAppTheme();
   const isDesktop = useIsDesktop();
+  const material = look.style === 'material';
+  const card = {
+    backgroundColor: fills.containerLow,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: fills.hairline,
+    borderRadius: look.radius.hero,
+    overflow: 'hidden' as const,
+  };
 
   const lines = useMemo(
     () => (data ?? []).filter((line) => line.show_in_frontend !== false),
@@ -129,9 +141,9 @@ export function MetroLinesScreen() {
       </View>
 
       <View style={styles.section}>
-        <View style={[styles.list, isDesktop && styles.listDesktop]}>
+        <View style={[styles.list, isDesktop && styles.listDesktop, !material && !isDesktop && [card, styles.groupedList]]}>
           {lines.map((line, index) => (
-            <View key={line.line_code} style={isDesktop ? styles.gridCell : undefined}>
+            <View key={line.line_code} style={isDesktop && [styles.gridCell, !material && card]}>
               <LineRow
                 line={line}
                 first={isDesktop || index === 0}
@@ -161,17 +173,11 @@ const styles = StyleSheet.create({
   section: {
     gap: spacing.xs,
   },
-  groupHead: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
-    paddingLeft: spacing.xs,
-  },
-  groupTitle: {
-    flex: 1,
-  },
   list: {
     gap: 3,
+  },
+  groupedList: {
+    gap: 0,
   },
   listDesktop: {
     flexDirection: 'row',

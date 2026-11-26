@@ -5,9 +5,10 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Touchable } from './Touchable';
 import { shortLineName } from './StationLineChip';
 import { useAppTheme } from '../theme/ThemeContext';
-import { spacing, shape, emphasis, tabular } from '../theme';
+import { spacing, shape, emphasis } from '../theme';
 import { stationName } from '../utils/format';
 import type { StationLineBadge } from '../types';
+import { useAdaptedStyles } from '../theme/useAdaptedStyles';
 
 interface StationLike {
   station_name: string;
@@ -28,8 +29,6 @@ interface Props {
   last?: boolean;
 }
 
-const OUTER = shape.xl;
-
 /**
  * Riders' name for a line. A few lines carry an internal code in `line_color`
  * (RMGL for Rapid Metro), so those use the operator's name instead.
@@ -39,7 +38,6 @@ function lineLabel(line: StationLineBadge): string {
   if (!color || /^[A-Z]{2,5}$/.test(color)) return shortLineName(line.line_name || color);
   return shortLineName(color);
 }
-const INNER = shape.sm;
 
 /**
  * One station in a segmented list: tiles with 3pt gaps where only the outer
@@ -57,8 +55,11 @@ export const StationCard = memo(function StationCard({
   first = true,
   last = true,
 }: Props) {
+  const styles = useAdaptedStyles(baseStyles);
   const theme = useTheme();
-  const { fills } = useAppTheme();
+  const { fills, look } = useAppTheme();
+  const outer = look.style === 'material' ? shape.xl : look.radius.hero;
+  const inner = look.style === 'material' ? shape.sm : 0;
 
   const lines = station.metro_lines ?? [];
   const colors = Array.from(new Set(lines.map((l) => l.primary_color_code).filter(Boolean))).slice(0, 4);
@@ -66,16 +67,16 @@ export const StationCard = memo(function StationCard({
   const name = stationName(station.station_name);
 
   const corners = {
-    borderTopLeftRadius: first ? OUTER : INNER,
-    borderTopRightRadius: first ? OUTER : INNER,
-    borderBottomLeftRadius: last ? OUTER : INNER,
-    borderBottomRightRadius: last ? OUTER : INNER,
+    borderTopLeftRadius: first ? outer : inner,
+    borderTopRightRadius: first ? outer : inner,
+    borderBottomLeftRadius: last ? outer : inner,
+    borderBottomRightRadius: last ? outer : inner,
   };
 
   return (
     <View style={[styles.wrapper, !last && styles.gap]}>
       <Touchable
-        radius={first || last ? OUTER : INNER}
+        radius={first || last ? outer : inner}
         haptic={showChevron ? 'navigate' : 'select'}
         accessibilityState={{ selected }}
         onPress={onPress}
@@ -132,7 +133,7 @@ export const StationCard = memo(function StationCard({
           <View style={[styles.code, { backgroundColor: selected ? 'transparent' : fills.containerHigh }]}>
             <Text
               variant="labelMedium"
-              style={[emphasis.strong, tabular, { color: theme.colors.onSurfaceVariant }]}
+              style={[emphasis.strong, look.figures, { color: theme.colors.onSurfaceVariant }]}
             >
               {station.station_code}
             </Text>
@@ -148,7 +149,7 @@ export const StationCard = memo(function StationCard({
   );
 });
 
-const styles = StyleSheet.create({
+const baseStyles = StyleSheet.create({
   wrapper: {
     paddingHorizontal: spacing.base,
   },
