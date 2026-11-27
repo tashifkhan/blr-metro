@@ -52,5 +52,10 @@
     "typescript": "~5.9.2",
     "wrangler": "^4.127.1"
   },
-  "private": true
+  "private": true,
+  "reanimated": {
+    "staticFeatureFlags": {
+      "ANDROID_SYNCHRONOUSLY_UPDATE_UI_PROPS": true
+    }
+  }
 }
