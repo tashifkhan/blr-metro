@@ -4,6 +4,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { StatusBar } from 'expo-status-bar';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { apiClient } from './src/api/client';
 import { queryClient } from './src/api/queryClient';
@@ -63,18 +64,20 @@ function AppInner() {
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <ThemeProvider>
-        <MetroNetworkProvider>
-          <DIProvider container={container}>
-            <QueryClientProvider client={queryClient}>
-              <SavedProvider>
-                <AppInner />
-              </SavedProvider>
-            </QueryClientProvider>
-          </DIProvider>
-        </MetroNetworkProvider>
-      </ThemeProvider>
-    </SafeAreaProvider>
+    <GestureHandlerRootView>
+      <SafeAreaProvider>
+        <ThemeProvider>
+          <MetroNetworkProvider>
+            <DIProvider container={container}>
+              <QueryClientProvider client={queryClient}>
+                <SavedProvider>
+                  <AppInner />
+                </SavedProvider>
+              </QueryClientProvider>
+            </DIProvider>
+          </MetroNetworkProvider>
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
