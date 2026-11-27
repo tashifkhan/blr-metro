@@ -25,9 +25,7 @@ const SOURCES: SourceEntry[] = [
   },
 ];
 
-function apiDocsUrl(): string {
-  return `${apiClient.baseUrl.replace(/\/api\/v\d+$/, '')}/docs`;
-}
+const API_DOCS_URL = 'https://blr-metro.tashif.codes/docs';
 
 function LinkRow({
   icon,
@@ -167,8 +165,8 @@ export function AboutScreen() {
           <LinkRow
             icon="code-slash-outline"
             title="API docs"
-            subtitle="Every endpoint, with a playground to call them"
-            url={apiDocsUrl()}
+            subtitle={API_DOCS_URL.replace('https://', '')}
+            url={API_DOCS_URL}
           />
         </Card>
       </View>

@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] — 2026-11-27
+
+- Panning and pinching the network map no longer lags. The map handles touch on the UI thread and skips drawing anything off screen.
+- The official schematic and the Phase map zoom a smaller preview, so pinching stays smooth. Saving a map still saves the full-size file.
+- On the website, pinching or Ctrl+scrolling over a map zooms the map, not the page. Scrolling past a station's map moves the page as before.
+- About shows the API address, blr-metro.tashif.codes/docs, and tapping it opens the docs.
+
 ## [1.1.0] — 2026-11-26
 
 - Plan, Map, Network, Saved and Alerts replace the old Search and Lines tabs. Network lists every line, and typing in its field switches to station matches. Old search and line links still open.
