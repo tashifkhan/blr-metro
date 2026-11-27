@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Panning and pinching the map stays smooth on 120 Hz phones. Station names used to make every redraw copy a screen-sized image once per name; now the phone's graphics chip draws the map and nothing redraws while your finger is down.
 - A quick swipe keeps the map gliding and slowing down. Touch it to stop.
 - Dragging or pinching past the edge of the detailed map shows the whole network's lines, lakes and stations instead of blank space. The detail fills in when the map stops.
+- Pinching to zoom keeps the spot between your fingers in place. Lifting one finger before the other used to shift the map, often upwards.
 
 ## [1.1.1] — 2026-11-27
 
