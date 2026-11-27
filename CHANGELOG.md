@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.2] — 2026-11-27
+
+- Panning and pinching the map stays smooth on 120 Hz phones. Station names used to make every redraw copy a screen-sized image once per name; now the phone's graphics chip draws the map and nothing redraws while your finger is down.
+- A quick swipe keeps the map gliding and slowing down. Touch it to stop.
+- Dragging or pinching past the edge of the detailed map shows the whole network's lines, lakes and stations instead of blank space. The detail fills in when the map stops.
+
 ## [1.1.1] — 2026-11-27
 
 - Panning and pinching the network map no longer lags. The map handles touch on the UI thread and skips drawing anything off screen.
@@ -46,6 +52,8 @@ The first Android release. The same app has run at [blr-metro.tashif.codes](http
 
 - BMRCL publishes no travel times, first or last trains, gates or platforms, so the app leaves those out rather than guess.
 
-[Unreleased]: https://github.com/tashifkhan/blr-metro/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/tashifkhan/blr-metro/compare/v1.1.2...HEAD
+[1.1.2]: https://github.com/tashifkhan/blr-metro/compare/v1.1.1...v1.1.2
+[1.1.1]: https://github.com/tashifkhan/blr-metro/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/tashifkhan/blr-metro/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/tashifkhan/blr-metro/releases/tag/v1.0.0
